@@ -24,3 +24,383 @@ body{background:#f8fafc;margin:0;-webkit-tap-highlight-color:transparent;color:#
 .glass-card{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8)}
 .checkbox-custom:checked + div{background:#ea580c;border-color:#ea580c}
 .checkbox-custom:checked + div svg{opacity:1;transform:scale(1)}
+.checkbox-custom + div svg{transition:all .2s;transform:scale(.5);opacity:0}
+</style>
+</head>
+<body class="antialiased overflow-x-hidden select-none">
+
+<!-- ============ LANDING PUBLIK ============ -->
+<div id="wrap-public">
+<nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-50">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-jagoDark text-white rounded-[12px] flex items-center justify-center text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+<div><h1 class="text-[18px] font-black leading-none">SIGAP PRAJA</h1><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Bangkalan</p></div>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-bold text-slate-500" href="#statistik">Statistik</a>
+<a class="text-sm font-bold text-slate-500" href="#galeri">Galeri Giat</a>
+<a class="text-sm font-bold text-slate-500" href="/p/login.html">Portal Petugas</a>
+<button class="bg-jagoDark text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-btnDark bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-ticket"></i> Lapor & Ticketing</button>
+</div>
+<button class="md:hidden bg-jagoDark text-white px-4 py-2 rounded-full text-xs font-bold bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-ticket"></i> Lapor</button>
+</div></nav>
+<div class="bg-white min-h-screen">
+<div class="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-slate-50 border-b border-slate-100 overflow-hidden">
+<div class="max-w-4xl mx-auto px-6 relative z-10 text-center flex flex-col items-center">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-6"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span class="text-[11px] font-bold text-slate-600 uppercase tracking-wider">Sistem Terintegrasi v3.0</span></div>
+<h1 class="text-[40px] md:text-[72px] font-black tracking-tight leading-[1.05] mb-6">Layanan Terpadu<br>Trantibum <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">Bangkalan.</span></h1>
+<p class="text-[16px] md:text-xl text-slate-500 font-medium max-w-2xl mx-auto mb-10">Platform pelaporan gangguan trantibum masyarakat dan transparansi kinerja operasional Satpol PP secara real-time.</p>
+<div class="flex flex-col sm:flex-row items-center gap-4">
+<button class="w-full sm:w-auto bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 px-8 shadow-btnDark bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-bullhorn"></i> Buat Laporan Pengaduan</button>
+<a class="w-full sm:w-auto bg-white border border-slate-200 text-slate-700 text-[16px] font-bold rounded-2xl py-4 px-8 bouncy-active" href="#statistik"><i class="fa-solid fa-chart-pie text-blue-500"></i> Lihat Transparansi</a>
+</div></div></div>
+<div class="py-20 max-w-7xl mx-auto px-6" id="statistik">
+<div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-black mb-4">Transparansi Kinerja</h2><p class="text-[15px] text-slate-500 max-w-2xl mx-auto">Data statistik giat operasional yang ditarik langsung dari Command Center.</p></div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" id="public-counters">
+<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Giat</p><h3 class="text-4xl font-black" id="pub-stat-giat">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Temuan Lapangan</p><h3 class="text-4xl font-black" id="pub-stat-temuan">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Barang Sitaan</p><h3 class="text-4xl font-black" id="pub-stat-sita">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tindak Lanjut</p><h3 class="text-4xl font-black text-emerald-500">100%</h3></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-soft"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Tren Giat Harian</h4><div class="relative h-64"><canvas id="publicChartTren"></canvas></div></div>
+<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-soft"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Kategori Penindakan</h4><div class="relative h-64"><canvas id="publicChartKategori"></canvas></div></div>
+</div></div>
+<div class="py-20 bg-slate-900" id="galeri">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div><h2 class="text-3xl md:text-4xl font-black text-white mb-3">Dokumentasi Lapangan</h2><p class="text-[15px] text-slate-400 max-w-xl">Arsip foto kegiatan penertiban dan patroli terbaru.</p></div>
+<div class="text-emerald-400 text-sm font-bold flex items-center gap-2 bg-emerald-400/10 px-4 py-2 rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Update</div></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="public-gallery-grid"><div class="col-span-full py-12 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Memuat Galeri...</div></div>
+</div></div>
+<footer class="bg-black text-white py-12"><div class="max-w-7xl mx-auto px-6 text-center">
+<div class="w-14 h-14 bg-white/10 rounded-[16px] flex items-center justify-center text-2xl mx-auto mb-6"><i class="fa-solid fa-shield-halved"></i></div>
+<h2 class="text-xl font-black mb-2">SIGAP PRAJA</h2><p class="text-xs text-slate-400 uppercase tracking-widest mb-8">Satpol PP Kab. Bangkalan</p>
+<p class="text-[12px] font-bold text-slate-600 uppercase tracking-widest">© 2026 Pemerintah Kabupaten Bangkalan.</p></div></footer>
+</div></div>
+
+<!-- ============ LAPOR PUBLIK ============ -->
+<div class="fixed inset-0 z-[100] hidden flex-col bg-slate-50 overflow-y-auto w-full" id="view-lapor-publik">
+<header class="bg-white px-6 py-5 sticky top-0 z-40 shadow-sm border-b border-slate-200"><div class="max-w-3xl mx-auto flex justify-between items-center">
+<div class="flex items-center gap-4"><button class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 bouncy-active" onclick="tutupLaporPublik()"><i class="fa-solid fa-arrow-left"></i></button>
+<div><h1 class="text-[18px] font-black leading-tight">Pusat Pengaduan</h1><p class="text-[11px] font-bold text-red-500 mt-0.5">Layanan & Ticketing</p></div></div></div></header>
+<div class="max-w-3xl mx-auto w-full px-6 py-8 flex-grow">
+<div class="flex bg-slate-200 p-1 rounded-2xl mb-8">
+<button class="flex-1 py-3 text-[13px] font-bold rounded-xl bg-white shadow-sm" id="tab-buat-lapor" onclick="switchTabPublik('buat')">Buat Aduan Baru</button>
+<button class="flex-1 py-3 text-[13px] font-bold rounded-xl text-slate-500" id="tab-cek-tiket" onclick="switchTabPublik('cek')">Cek Status Tiket</button></div>
+<div class="bg-white rounded-[32px] border border-slate-100 shadow-soft overflow-hidden" id="konten-buat-lapor">
+<div class="p-6 md:p-8 space-y-6" id="step-aduan-1">
+<h2 class="text-[20px] font-black flex items-center gap-2"><i class="fa-solid fa-bullhorn text-red-500"></i> Laporkan Kejadian</h2>
+<label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Kategori Gangguan</label>
+<select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-kategori">
+<option>PKL Mengganggu Ketertiban</option><option>Anak Jalanan / Pengemis</option><option>Reklame / Banner Liar</option><option>Gangguan Lingkungan / Bising</option><option>Lainnya</option></select>
+<div class="flex justify-between items-center mb-2"><label class="text-[12px] font-bold text-slate-500 uppercase">Lokasi Kejadian</label><button class="text-[10px] font-bold text-white bg-jagoDark px-3 py-1.5 rounded-lg bouncy-active" onclick="lacakGPSAduan()"><i class="fa-solid fa-location-crosshairs"></i> Lacak GPS</button></div>
+<textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4 resize-none" id="input-aduan-lokasi" placeholder="Detail lokasi, nama jalan, patokan..." rows="2"></textarea>
+<input id="input-aduan-koordinat" type="hidden">
+<button class="w-full bg-jagoDark text-white text-[15px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="ubahStepAduan(2)">Lanjut Isi Detail <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+<div class="p-6 md:p-8 space-y-6 hidden" id="step-aduan-2">
+<button class="text-[12px] font-bold text-slate-400 flex items-center gap-1" onclick="ubahStepAduan(1)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Anda</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-nama" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">No. WhatsApp</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-hp" type="number"></div></div>
+<label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Deskripsi Kejadian</label>
+<textarea class="w-full bg-white border border-slate-200 text-[14px] font-medium rounded-xl py-3 px-4 resize-none" id="input-aduan-deskripsi" rows="3"></textarea>
+<input accept="image/*" class="hidden" id="input-aduan-foto" onchange="prosesFotoAduan(event)" type="file">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-4 rounded-xl flex items-center justify-center gap-2 bouncy-active" id="btn-aduan-foto" onclick="document.getElementById('input-aduan-foto').click()"><i class="fa-solid fa-camera text-lg"></i> Lampirkan Foto</button>
+<div class="hidden relative w-full h-40 bg-slate-100 rounded-xl border border-slate-200 overflow-hidden" id="preview-aduan-container">
+<img class="w-full h-full object-cover" id="preview-img-aduan">
+<button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoAduan()"><i class="fa-solid fa-trash text-xs"></i></button></div>
+<button class="w-full bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnKirimAduan" onclick="kirimAduan()"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan Sekarang</button>
+</div></div>
+<div class="hidden bg-white p-6 md:p-8 rounded-[32px] border border-slate-100 shadow-soft flex-col min-h-[400px]" id="konten-cek-tiket">
+<h2 class="text-[20px] font-black mb-2 text-center">Lacak Status Laporan</h2>
+<div class="w-full max-w-md mx-auto relative mb-4 flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-4">
+<span class="font-black text-slate-400 mr-3 border-r border-slate-200 pr-3 py-4"><i class="fa-solid fa-ticket mr-2"></i>TKT -</span>
+<input class="w-full bg-transparent text-[16px] font-black tracking-widest py-4 focus:outline-none" id="input-cek-tiket" inputmode="numeric" placeholder="123456"></div>
+<button class="w-full max-w-md mx-auto bg-jagoDark text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active flex justify-center" onclick="cekStatusTiket()">Cari Laporan Saya</button>
+<div class="mt-10 pt-8 border-t border-slate-100">
+<div class="flex justify-between items-center mb-4"><h3 class="font-bold text-[15px]"><i class="fa-solid fa-list-ul mr-2 text-slate-400"></i> Daftar Laporan Terbaru</h3>
+<button class="text-[11px] font-bold text-blue-500 bg-blue-50 px-3 py-1.5 rounded-lg bouncy-active" onclick="renderDaftarTiketWarga()"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button></div>
+<div class="space-y-3" id="list-semua-tiket"></div></div>
+</div></div></div>
+
+<!-- ============ MODAL TRACKER WARGA ============ -->
+<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-tracker">
+<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-tracker-content">
+<div class="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-start">
+<div><span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Detail Tiket</span><h2 class="text-[20px] font-black mt-1" id="trk-id">TKT-XXXXXX</h2></div>
+<button class="w-8 h-8 bg-white border border-slate-200 text-slate-400 rounded-full bouncy-active" onclick="tutupModalTracker()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="p-6 overflow-y-auto hide-scroll">
+<h3 class="font-bold text-[14px] mb-1" id="trk-kategori">Kategori</h3><p class="text-[12px] text-slate-500 mb-6" id="trk-lokasi">Lokasi</p>
+<div class="relative pl-4 space-y-5 border-l-2 border-slate-200" id="trk-timeline"></div>
+<div class="hidden mt-8 pt-6 border-t border-slate-100" id="trk-progress-area">
+<h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Dokumentasi Tindak Lanjut</h4>
+<img class="w-full h-40 object-cover rounded-2xl border border-slate-200 mb-3" id="trk-img-progress" src="">
+<div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl"><p class="text-[12px] font-medium text-blue-900 italic" id="trk-teks-progress"></p></div></div>
+</div></div></div>
+
+<!-- ============ SHELL APLIKASI (LOGIN & DASHBOARD) ============ -->
+<div class="hidden flex-col min-h-[100dvh] bg-white z-[70] fixed w-full items-center justify-center" id="view-loading">
+<div class="w-20 h-20 bg-white rounded-[24px] shadow-soft flex items-center justify-center mb-6 border border-slate-50"><div class="loader"></div></div>
+<h1 class="text-2xl font-black tracking-tight">SIGAP PRAJA</h1><p class="text-[12px] font-bold text-slate-400 mt-2 tracking-widest uppercase">Menyinkronkan Data...</p></div>
+
+<div class="hidden flex-col min-h-[100dvh] bg-white relative w-full max-w-md mx-auto" id="view-login">
+<div class="px-8 flex-grow flex flex-col justify-center pb-12">
+<div class="w-16 h-16 bg-jagoDark text-white rounded-[20px] flex items-center justify-center text-3xl shadow-soft mb-8"><i class="fa-solid fa-shield-halved"></i></div>
+<h1 class="text-[40px] font-black leading-[1.05] tracking-tight">Portal<br>Operasional</h1>
+<p class="text-[15px] font-medium text-slate-500 mt-5">Sistem Informasi Gangguan & Penertiban Praja. Satpol PP Kab. Bangkalan.</p>
+<form class="mt-10" id="loginForm" onsubmit="event.preventDefault(); prosesLogin(event);">
+<div class="glass-card rounded-[28px] p-2.5 shadow-soft border border-slate-100">
+<div class="bg-jagoBg rounded-[20px] flex items-center px-5 py-4 mb-2.5"><i class="fa-regular fa-id-badge text-slate-400 text-xl mr-4"></i><input autocomplete="off" class="w-full bg-transparent text-[16px] font-bold focus:outline-none" id="login-nama" placeholder="ID Tim (cth: tim2)" required type="text"></div>
+<div class="bg-jagoBg rounded-[20px] flex items-center px-5 py-4"><i class="fa-solid fa-lock text-slate-400 text-xl mr-4"></i><input class="w-full bg-transparent text-[16px] font-black tracking-widest focus:outline-none" id="login-pin" placeholder="PIN Akses" required type="password"></div></div>
+<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 mt-8 shadow-btnDark bouncy-active" id="btnLogin" type="submit">Masuk Sistem <i class="fa-solid fa-arrow-right ml-1"></i></button>
+<button class="w-full bg-slate-100 text-slate-700 text-[16px] font-bold rounded-2xl py-4 mt-3 bouncy-active" onclick="bukaMenuPetugasUmum()" type="button"><i class="fa-solid fa-users-line"></i> Masuk Petugas Umum</button>
+</form></div></div>
+
+<!-- DASHBOARD PATROLI -->
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-dashboard">
+<header class="bg-white px-6 py-6 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2"><div class="flex justify-between items-center">
+<div><h1 class="text-[22px] font-black leading-none">SIGAP PRAJA</h1><p class="text-[11px] font-bold text-slate-400 tracking-widest uppercase mt-1">Satpol PP Bangkalan</p></div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center font-black text-sm border border-slate-100" id="dash-avatar">T1</div>
+<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></div></div></header>
+<div class="px-6 pt-4">
+<div class="hidden bg-orange-50 border border-orange-200/60 rounded-[24px] p-5 flex items-center justify-between shadow-soft mb-8 bouncy-active" id="alert-draft" onclick="lanjutkanPatroli()">
+<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-jagoOrange rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
+<div><p class="text-[15px] font-bold leading-tight">Giat Tim Sedang Berjalan!</p><p class="text-[12px] font-medium text-slate-500 mt-0.5" id="text-draft-sync">Tap untuk memantau.</p></div></div>
+<div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></div></div>
+<h2 class="text-[18px] font-extrabold mb-5 px-1">Giat Operasional</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white rounded-[28px] p-6 shadow-soft border border-slate-50 bouncy-active flex flex-col items-start" onclick="bukaPersiapanPatroli()"><div class="w-14 h-14 bg-slate-50 rounded-[18px] flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-truck-fast"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Patroli<br><span class="text-slate-400 font-semibold text-[13px]">Log Book Giat</span></h3></div>
+<div class="bg-white rounded-[28px] p-6 shadow-soft border border-slate-50 bouncy-active flex flex-col items-start" onclick="bukaFormSitaan()"><div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-[18px] flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-boxes-stacked"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Barang Bukti<br><span class="text-slate-400 font-semibold text-[13px]">Input Sitaan</span></h3></div>
+</div></div></div>
+
+<!-- TIMELINE PATROLI AKTIF -->
+<div class="hidden flex-col min-h-[100dvh] bg-jagoBg relative w-full max-w-md mx-auto z-[50]" id="view-patroli-aktif">
+<header class="bg-white px-5 py-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
+<div class="flex items-center"><button class="w-12 h-12 rounded-full bouncy-active bg-slate-50" onclick="konfirmasiKeluarPatroli()"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+<div class="ml-3"><h1 class="text-[18px] font-black leading-tight">Giat Berlangsung</h1><p class="text-[12px] font-bold text-orange-500 flex items-center gap-1.5 mt-0.5" id="status-sync-cloud"><i class="fa-solid fa-cloud-arrow-up"></i> Server Terhubung</p></div></div>
+<div class="flex gap-2"><button class="w-10 h-10 rounded-full bg-red-50 border border-red-100 text-red-500 bouncy-active" onclick="hapusDraftPatroli()"><i class="fa-solid fa-trash-can"></i></button>
+<button class="bg-jagoDark text-white text-[13px] font-bold px-5 py-2.5 rounded-full bouncy-active shadow-btnDark" id="btnKirimSemua" onclick="kirimSemuaLaporan()">Kirim Laporan</button></div></header>
+<div class="flex-grow px-6 py-8 overflow-y-auto pb-36">
+<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="timeline-kosong"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Log Book Kosong.</p></div>
+<div class="space-y-5 relative" id="timeline-list"></div></div>
+<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-jagoOrange text-white font-bold py-4 rounded-full shadow-btnOrange bouncy-active flex justify-center items-center gap-2 text-[16px]" onclick="bukaFormTemuan()"><i class="fa-solid fa-plus"></i> Tambah Temuan</button></div></div>
+
+<!-- SHEET PERSIAPAN PATROLI -->
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-persiapan">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupPersiapanPatroli()"></div>
+<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black">Persiapan Giat</h2><p class="text-[13px] text-slate-500 mt-1">Lengkapi personel sebelum patroli.</p></div>
+<div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Pimpinan Apel / Pengarah</label><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl py-4 px-5" id="input-pimpinan-apel" type="text"></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Anggota Tambahan / BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="input-anggota-bko" type="text"><button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold bouncy-active" onclick="tambahAnggotaBKO()"><i class="fa-solid fa-plus"></i></button></div></div>
+<div><div class="flex justify-between items-end mb-3"><label class="text-[13px] font-bold text-slate-500 uppercase">Anggota Yang Hadir</label><button class="text-[12px] font-bold bg-slate-100 px-3 py-1 rounded-md" onclick="centangSemua()">Pilih Semua</button></div>
+<div class="grid grid-cols-1 gap-3" id="container-anggota"></div></div>
+<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="eksekusiMulaiPatroli()">Mulai Log Book</button>
+</div></div></div>
+
+<!-- SHEET TEMUAN -->
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-temuan">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormTemuan()"></div>
+<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black" id="title-form-temuan">Catat Kejadian</h2><button class="w-10 h-10 text-slate-400 bg-slate-50 rounded-full bouncy-active" onclick="tutupFormTemuan()"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+<div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
+<div id="group-input-fields" class="space-y-6">
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Jenis Kejadian</label>
+<select class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-[16px] py-4 px-4" id="input-kategori">
+<option value="Patroli|-">Patroli</option><option value="APP (Acara Perintah Pimpinan)|-">APP Pimpinan</option>
+<option value="Deteksi & Cegah Dini|Informasi Unjuk Rasa">Informasi Unjuk Rasa</option><option value="Deteksi & Cegah Dini|SIROLEG">SIROLEG</option>
+<option value="Penertiban|PKL">Penertiban PKL</option><option value="Penertiban|Banner Ilegal / Expired">Banner Ilegal</option><option value="Penertiban|Anak Jalanan">Anak Jalanan</option><option value="Penertiban|ODGJ">ODGJ</option><option value="Penertiban|Pengemis">Pengemis</option><option value="Penertiban|Rokok Ilegal">Rokok Ilegal</option>
+<option value="Pengamanan|Event / Acara">Pengamanan Event</option><option value="Pengawalan|-">Pengawalan</option></select></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Lokasi / Koordinat</label><input id="input-koordinat" type="hidden"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-[16px] py-3.5 px-5 resize-none" id="input-lokasi-teks" rows="2"></textarea></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Tindakan / Kronologi</label><textarea class="w-full bg-white border border-slate-200 text-[15px] font-medium rounded-[16px] py-4 px-5" id="input-keterangan" rows="3"></textarea></div></div>
+<div><input accept="image/*" capture="environment" class="hidden" id="input-kamera" onchange="prosesFotoKompresi(event)" type="file">
+<input accept="image/*" class="hidden" id="input-galeri" multiple onchange="prosesFotoKompresi(event)" type="file">
+<div class="grid grid-cols-2 gap-3 mb-2">
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-kamera').click()"><i class="fa-solid fa-camera text-2xl"></i><span class="text-[12px]">Kamera + Timemark</span></button>
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-galeri').click()"><i class="fa-regular fa-images text-2xl text-blue-500"></i><span class="text-[12px]">Pilih Galeri</span></button></div>
+<div class="hidden mt-3 bg-[#0f172a] rounded-2xl p-3 flex justify-between items-center" id="thumbnail-bar"><span class="text-[11px] font-black text-white tracking-widest uppercase ml-1" id="thumb-count-text">0 BERKAS.</span><div class="flex gap-1 items-center" id="thumb-images-container"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusPreview()"><i class="fa-solid fa-trash"></i></button></div></div>
+<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSaveGiatAction" onclick="simpanKeTimeline()">Simpan Data</button>
+</div></div></div>
+
+<!-- SHEET SITAAN -->
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-sitaan">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormSitaan()"></div>
+<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black text-blue-600"><i class="fa-solid fa-boxes-stacked mr-2"></i> Form Sitaan</h2></div>
+<div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jenis Barang</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-jenis" type="text"></div>
+<div class="grid grid-cols-2 gap-4"><div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jumlah</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-jumlah" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Lokasi Sita</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-lokasi" type="text"></div></div>
+<div><input accept="image/*" capture="environment" class="hidden" id="input-sita-kamera" onchange="prosesFotoSita(event)" type="file">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 bouncy-active" id="btn-sita-foto" onclick="document.getElementById('input-sita-kamera').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i><span class="text-[12px]">Jepret Barang Bukti</span></button>
+<div class="relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 hidden overflow-hidden" id="preview-sita-container"><img class="w-full h-full object-cover" id="preview-img-sita"><button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoSita()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
+<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSimpanSita" onclick="simpanBarangSita()"><i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Gudang Server</button>
+</div></div></div>
+
+<!-- RIWAYAT & ANGGOTA & SKP -->
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-history-patroli">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Riwayat Giat</h1></header>
+<div class="px-6 pt-4 space-y-4" id="container-riwayat-patroli"></div></div>
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-anggota">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Anggota Tim</h1></header>
+<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-soft border border-slate-50 mb-8">
+<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="input-nama-anggota" type="text"><button class="bg-jagoDark text-white w-14 h-14 rounded-2xl font-bold bouncy-active flex-shrink-0" onclick="tambahAnggotaTim()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
+<div class="space-y-3" id="list-anggota-tim"></div></div></div>
+<div class="hidden flex-col min-h-[100dvh] bg-slate-50 relative w-full md:max-w-6xl max-w-md mx-auto z-[30] pb-28" id="view-arsip-skp">
+<header class="bg-white px-6 md:px-12 py-5 sticky top-0 z-40 shadow-sm border-b border-slate-200 mb-2 flex justify-between items-center">
+<h1 class="text-[20px] md:text-2xl font-black"><i class="fa-solid fa-folder-open text-blue-500 hidden md:block"></i> Arsip SKP</h1>
+<button class="w-10 h-10 rounded-full bg-slate-50 bouncy-active border border-slate-200" onclick="fetchUsersData(false).then(()=>renderDropdownSKP())"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="px-6 md:px-12 pt-4">
+<div class="bg-white p-5 rounded-[24px] shadow-soft border border-slate-100 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pilih Bulan Giat</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="filter-skp-bulan" onchange="renderArsipSKP(true)"></select></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Saring Nama Petugas</label><input class="w-full bg-white border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="filter-skp-nama" onkeyup="renderArsipSKP(true)" type="text"></div></div>
+<h2 class="text-[15px] font-extrabold mb-4">Hasil: <span class="text-blue-500" id="count-skp">0</span> Giat</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="container-arsip-skp"></div></div></div>
+
+<!-- ADMIN DASHBOARD -->
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-24" id="view-admin-dashboard">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
+<div><h1 class="text-xl md:text-2xl font-black flex items-center gap-3"><i class="fa-solid fa-shield-halved text-jagoOrange"></i> COMMAND CENTER</h1></div>
+<div class="flex items-center gap-4"><button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full bouncy-active border border-slate-200" onclick="fetchUsersData(false).then(()=>renderAdminDashboard())"><i class="fa-solid fa-rotate"></i></button>
+<button class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-sm font-bold bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar</button></div></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-8 space-y-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Giat</p><h2 class="text-3xl font-black mt-1" id="stat-total-laporan">0</h2></div>
+<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Temuan</p><h2 class="text-3xl font-black mt-1" id="stat-total-temuan">0</h2></div>
+<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Brg Bukti</p><h2 class="text-3xl font-black mt-1" id="stat-total-sita">0</h2></div>
+<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Blacklist</p><h2 class="text-3xl font-black mt-1" id="stat-total-blacklist">0</h2></div></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-blue-50 border border-blue-100 p-4 rounded-[20px] flex items-center gap-3"><i class="fa-solid fa-filter text-blue-500"></i><select class="w-full bg-white border border-blue-200 text-[12px] font-bold rounded-xl px-3 py-2" id="filter-admin-kategori" onchange="renderAdminDashboard()"><option value="ALL">Semua Kategori</option></select></div>
+<div class="bg-red-50 border border-red-100 p-4 rounded-[20px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-3 h-3 bg-red-500 rounded-full animate-ping"></div><span class="text-[11px] font-extrabold text-red-800 uppercase">Live Giat Tim</span></div><div class="flex flex-wrap gap-2 justify-end" id="stat-tim-aktif"></div></div></div>
+<div class="bg-white p-5 rounded-[28px] border border-slate-100 shadow-soft"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Pemetaan Lokasi Giat</h3><div class="w-full h-[400px] rounded-[20px] bg-slate-100 border border-slate-200 relative z-10" id="adminMapContainer"></div></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft md:col-span-2"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Tren Giat</h3><div class="relative h-64"><canvas id="chartTren"></canvas></div></div>
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Komposisi</h3><div class="relative h-64"><canvas id="chartKategori"></canvas></div></div>
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft md:col-span-3"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Kinerja Per Tim</h3><div class="relative h-64"><canvas id="chartTim"></canvas></div></div></div>
+</div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-sita">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm sticky top-0 z-50 border-b border-slate-200"><h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-boxes-stacked text-blue-500"></i> GUDANG SITA</h1></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="container-gudang-sita"></div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-blacklist">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
+<h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-skull-crossbones text-red-500"></i> DB BLACKLIST</h1>
+<button class="bg-jagoDark text-white px-4 py-2 rounded-xl text-sm font-bold bouncy-active" onclick="bukaFormBlacklist()"><i class="fa-solid fa-plus"></i> Tambah</button></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="container-blacklist"></div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-aduan">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
+<h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-headset text-red-500"></i> PUSAT ADUAN</h1>
+<button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full bouncy-active border border-slate-200" onclick="sinkronDataAduan()"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6">
+<div class="flex bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm mb-6 max-w-md">
+<button class="flex-1 py-2 text-[12px] font-bold rounded-lg bg-jagoDark text-white" id="tab-aduan-baru" onclick="filterAduan('Antrean')">Baru Masuk</button>
+<button class="flex-1 py-2 text-[12px] font-bold rounded-lg text-slate-500" id="tab-aduan-proses" onclick="filterAduan('Diproses')">Diproses / Selesai</button></div>
+<div class="space-y-4" id="container-admin-aduan"></div></div></div>
+
+<!-- SHEET BLACKLIST -->
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-blacklist">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormBlacklist()"></div>
+<div class="bottom-sheet sheet-hidden bg-[#0f172a] w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl border border-slate-800">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-700 rounded-full"></div></div>
+<div class="px-8 pb-4 border-b border-slate-800"><h2 class="text-[22px] font-black text-red-500"><i class="fa-solid fa-skull-crossbones mr-2"></i> Form Blacklist</h2></div>
+<div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">NIK KTP</label><input class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-nik" type="number"></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Nama Lengkap</label><input class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-nama" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Kategori</label><select class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-kategori"><option>PKL Bandel</option><option>Anjal / Gepeng</option><option>Pemasang Reklame Ilegal</option><option>Lainnya</option></select></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Catatan</label><textarea class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-catatan" rows="2"></textarea></div>
+<button class="w-full bg-red-600 text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active" id="btnSimpanBlacklist" onclick="simpanBlacklist()"><i class="fa-solid fa-user-lock"></i> Kunci ke Database</button>
+</div></div></div>
+
+<!-- MODAL PROGRESS ADMIN -->
+<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-admin-progress">
+<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-admin-content">
+<div class="bg-blue-600 p-6 flex justify-between items-start text-white">
+<div><span class="text-[10px] font-bold tracking-widest uppercase opacity-80">Update Laporan Lapangan</span><h2 class="text-[20px] font-black mt-1" id="adm-prog-id">TKT-XXXXXX</h2></div>
+<button class="w-8 h-8 bg-white/20 rounded-full bouncy-active" onclick="tutupModalAdminProgress()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="p-6 overflow-y-auto hide-scroll space-y-4">
+<div><input accept="image/*" class="hidden" id="input-prog-foto" onchange="prosesFotoProgress(event)" type="file">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 bouncy-active" id="btn-prog-foto" onclick="document.getElementById('input-prog-foto').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i> Ambil Foto Lapangan</button>
+<div class="hidden relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 overflow-hidden" id="preview-prog-container"><img class="w-full h-full object-cover" id="preview-img-prog"><button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoProgress()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Keterangan Tindak Lanjut</label><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-medium rounded-2xl py-3 px-4 resize-none" id="input-prog-teks" rows="3"></textarea></div>
+<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active" id="btnSimpanProgress" onclick="simpanProgressKeServer()">Kirim Progress</button>
+</div></div></div>
+
+<!-- DASHBOARD UMUM -->
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-dashboard-umum">
+<header class="bg-white px-6 py-6 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
+<div><h1 class="text-[22px] font-black leading-none">PETUGAS UMUM</h1><p class="text-[11px] font-bold text-slate-400 tracking-widest uppercase mt-1">Satpol PP Bangkalan</p></div>
+<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></header>
+<div class="px-6 pt-4">
+<button class="w-full mb-6 bg-orange-50 border border-orange-200/60 rounded-[24px] p-5 flex items-center justify-between shadow-soft bouncy-active" onclick="bukaDaftarDraftUmum()">
+<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-jagoOrange rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div><div><p class="text-[15px] font-bold leading-tight text-left">Daftar Logbook Aktif</p><p class="text-[12px] font-medium text-slate-500 mt-0.5 text-left" id="text-draft-umum-count">Melihat giat bersama</p></div></div>
+<div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></div></button>
+<h2 class="text-[18px] font-extrabold mb-4 px-1">Pilih Kategori Kegiatan</h2>
+<div class="grid grid-cols-2 gap-4">
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Deteksi & Cegah Dini')"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-eye"></i></div><h3 class="font-extrabold text-[14px]">Deteksi &<br>Cegah Dini</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Patroli')"><div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-shield"></i></div><h3 class="font-extrabold text-[14px]">Patroli<br>Wilayah</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Pembinaan & Penyuluhan')"><div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-users-rays"></i></div><h3 class="font-extrabold text-[14px]">Pembinaan &<br>Penyuluhan</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Penanganan Unras')"><div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-fire"></i></div><h3 class="font-extrabold text-[14px]">Penanganan<br>Unras</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Penertiban')"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-gavel"></i></div><h3 class="font-extrabold text-[14px]">Giat<br>Penertiban</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Pengamanan')"><div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-user-shield"></i></div><h3 class="font-extrabold text-[14px]">Giat<br>Pengamanan</h3></button>
+<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left col-span-2" onclick="bukaPersiapanUmum('Pengawalan')"><div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-motorcycle"></i></div><h3 class="font-extrabold text-[14px]">Pengawalan</h3></button>
+</div></div></div>
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-draft-umum">
+<header class="bg-white px-6 py-5 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
+<div class="flex items-center gap-3"><button class="w-10 h-10 rounded-full bg-slate-50 bouncy-active border border-slate-200" onclick="switchView('view-dashboard-umum')"><i class="fa-solid fa-arrow-left"></i></button><h1 class="text-[18px] font-black">Daftar Logbook</h1></div></header>
+<div class="px-6 pt-4 space-y-4" id="container-draft-umum"></div></div>
+<div class="hidden flex-col min-h-[100dvh] bg-jagoBg relative w-full max-w-md mx-auto z-[50]" id="view-patroli-umum">
+<header class="bg-white px-5 py-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
+<div class="flex items-center"><button class="w-12 h-12 rounded-full bouncy-active bg-slate-50" onclick="switchView('view-dashboard-umum')"><i class="fa-solid fa-arrow-left text-xl"></i></button><div class="ml-3"><h1 class="text-[16px] font-black leading-tight truncate w-32" id="header-nama-giat-umum">Logbook</h1><p class="text-[11px] font-bold text-emerald-500 mt-0.5"><i class="fa-solid fa-users mr-1"></i>Akses Bersama</p></div></div>
+<div class="flex gap-2"><button class="bg-jagoDark text-white text-[13px] font-bold px-4 py-2 rounded-full bouncy-active shadow-btnDark" onclick="kirimLaporanUmum()">Kirim Laporan</button></div></header>
+<div class="flex-grow px-6 py-8 overflow-y-auto pb-36">
+<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="timeline-kosong-umum"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Belum Ada Rangkaian</p></div>
+<div class="space-y-5 relative" id="timeline-list-umum"></div></div>
+<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-blue-600 text-white font-bold py-4 rounded-full shadow-btnDark bouncy-active flex justify-center items-center gap-2 text-[16px]" onclick="bukaFormTemuanUmum()"><i class="fa-solid fa-plus"></i> Rangkaian Kegiatan</button></div></div>
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-persiapan-umum">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupPersiapanUmum()"></div>
+<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[95dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black" id="title-persiapan-umum">Persiapan</h2><p class="text-[13px] text-slate-500 mt-1">Sesuai Surat Perintah Tugas (SPT)</p></div>
+<div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Kegiatan</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-umum-nama-giat" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pelapor</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-umum-pelapor" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Instansi Gabungan / BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="input-umum-anggota-bko" type="text"><button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold bouncy-active" onclick="tambahAnggotaBKOUmum()"><i class="fa-solid fa-plus"></i></button></div></div>
+<div><div class="flex justify-between items-end mb-2"><label class="text-[12px] font-bold text-slate-500 uppercase">Daftar Anggota Hadir</label><button class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded-md bouncy-active" onclick="centangSemuaUmum()">Pilih Semua</button></div>
+<div class="bg-slate-50 border border-slate-200 rounded-xl p-2 h-40 overflow-y-auto hide-scroll space-y-2" id="container-anggota-umum"></div></div>
+<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="mulaiLogbookUmum()">Buat Logbook Baru</button>
+</div></div></div>
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-temuan-umum">
+<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormTemuanUmum()"></div>
+<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black">Rangkaian Kegiatan</h2><button class="w-10 h-10 text-slate-400 bg-slate-50 rounded-full bouncy-active" onclick="tutupFormTemuanUmum()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
+<div class="space-y-6" id="group-input-fields-umum">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Sub Kegiatan</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-4 px-4" id="input-umum-subkategori"></select></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Lokasi</label><input id="input-umum-koordinat" type="hidden"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-3 px-4 resize-none" id="input-umum-lokasi" rows="2"></textarea></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Tindakan</label><textarea class="w-full bg-white border border-slate-200 text-[14px] font-medium rounded-2xl py-3 px-4" id="input-umum-keterangan" rows="3"></textarea></div></div>
+<div><input accept="image/*" capture="environment" class="hidden" id="input-umum-kamera" onchange="prosesFotoKompresiUmum(event)" type="file">
+<input accept="image/*" class="hidden" id="input-umum-galeri" multiple onchange="prosesFotoKompresiUmum(event)" type="file">
+<div class="grid grid-cols-2 gap-3 mb-2">
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-umum-kamera').click()"><i class="fa-solid fa-camera text-xl"></i><span class="text-[11px]">Kamera GPS</span></button>
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-umum-galeri').click()"><i class="fa-regular fa-images text-xl text-blue-500"></i><span class="text-[11px]">Pilih Galeri</span></button></div>
+<div class="hidden mt-3 bg-[#0f172a] rounded-2xl p-3 flex justify-between items-center" id="thumbnail-bar-umum"><span class="text-[10px] font-black text-white tracking-widest uppercase ml-1" id="thumb-count-text-umum">0 BERKAS</span><div class="flex gap-1 items-center" id="thumb-images-container-umum"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusPreviewUmum()"><i class="fa-solid fa-trash"></i></button></div></div>
+<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSaveGiatUmum" onclick="simpanKeTimelineUmum()">Simpan Kegiatan</button>
+</div></div></div>
+<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-anggota-umum">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Petugas</h1></header>
+<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-soft border border-slate-50 mb-8">
+<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="input-nama-petugas-umum" type="text"><button class="bg-jagoDark text-white w-14 h-14 rounded-2xl font-bold bouncy-active flex-shrink-0" onclick="tambahPetugasUmum()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
+<div class="space-y-3" id="list-petugas-umum"></div></div></div>
+
+<!-- MODAL SUKSES -->
+<div class="fixed inset-0 z-[130] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4" id="modal-sukses">
+<div class="bg-white w-full max-w-sm rounded-[32px] p-8 text-center transform scale-95 transition-transform" id="modal-sukses-content">
+<div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i class="fa-solid fa-check"></i></div>
+<h2 class="text-xl font-black mb-2">Berhasil!</h2><p class="text-[13px] text-slate-500 font-medium mb-6" id="modal-sukses-desc"></p>
+<button class="w-full bg-emerald-500 text-white font-bold py-4 rounded-2xl mb-2 bouncy-active hidden" id="btnShareWA"><i class="fa-brands fa-whatsapp mr-2"></i> Bag
