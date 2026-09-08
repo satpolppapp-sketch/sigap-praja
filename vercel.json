@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/p/index.html", "destination": "/index.html" },
+    { "source": "/p/login.html", "destination": "/index.html" },
+    { "source": "/p/admin.html", "destination": "/index.html" },
+    { "source": "/p/patroli.html", "destination": "/index.html" },
+    { "source": "/p/umum.html", "destination": "/index.html" }
+  ]
+}
