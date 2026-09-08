@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>SIGAP PRAJA - Satpol PP Bangkalan</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -12,38 +12,33 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif']},colors:{jagoDark:'#0f172a',jagoOrange:'#ea580c',jagoBg:'#f8fafc'},boxShadow:{soft:'0 8px 30px rgba(0,0,0,0.04)',btnDark:'0 4px 14px rgba(15,23,42,0.4)',btnOrange:'0 4px 14px rgba(234,88,12,0.4)',float:'0 -10px 40px rgba(0,0,0,0.05)'}}}}</script>
 <style>
-body{background:#f8fafc;margin:0;-webkit-tap-highlight-color:transparent;color:#0f172a}
+body{background:#f8fafc;margin:0;color:#0f172a;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 .hide-scroll::-webkit-scrollbar{display:none}
-.bouncy-active:active{transform:scale(0.96)}
-.loader{border:3px solid #E2E8F0;border-radius:50%;border-top:3px solid #ea580c;width:32px;height:32px;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.bottom-sheet{transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sheet-hidden{transform:translateY(100%)}.sheet-visible{transform:translateY(0)}
-.glass-card{background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.8)}
-.checkbox-custom:checked + div{background:#ea580c;border-color:#ea580c}
-.checkbox-custom:checked + div svg{opacity:1;transform:scale(1)}
-.checkbox-custom + div svg{transition:all .2s;transform:scale(.5);opacity:0}
+.b{transition:transform .1s}.b:active{transform:scale(.96)}
+.loader{border:3px solid #E2E8F0;border-top:3px solid #ea580c;border-radius:50%;width:32px;height:32px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sheet{transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sh{transform:translateY(100%)}.sv{transform:translateY(0)}
+.cb:checked+div{background:#ea580c;border-color:#ea580c}
+.cb:checked+div svg{opacity:1;transform:scale(1)}
+.cb+div svg{transition:all .2s;transform:scale(.5);opacity:0}
 </style>
 </head>
 <body class="antialiased overflow-x-hidden select-none">
 
-<!-- ============ LANDING PUBLIK ============ -->
-<div id="wrap-public">
+<!-- ============ PUBLIK ============ -->
+<div id="page-public" class="hidden">
 <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-50">
 <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 bg-jagoDark text-white rounded-[12px] flex items-center justify-center text-xl"><i class="fa-solid fa-shield-halved"></i></div>
-<div><h1 class="text-[18px] font-black leading-none">SIGAP PRAJA</h1><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Bangkalan</p></div>
-</div>
+<div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+<div><h1 class="text-[18px] font-black leading-none">SIGAP PRAJA</h1><p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Bangkalan</p></div></div>
 <div class="hidden md:flex items-center gap-8">
 <a class="text-sm font-bold text-slate-500" href="#statistik">Statistik</a>
 <a class="text-sm font-bold text-slate-500" href="#galeri">Galeri Giat</a>
 <a class="text-sm font-bold text-slate-500" href="/p/login.html">Portal Petugas</a>
-<button class="bg-jagoDark text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-btnDark bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-ticket"></i> Lapor & Ticketing</button>
-</div>
-<button class="md:hidden bg-jagoDark text-white px-4 py-2 rounded-full text-xs font-bold bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-ticket"></i> Lapor</button>
+<button class="bg-slate-900 text-white px-6 py-2.5 rounded-full text-sm font-bold b" onclick="bukaLapor()"><i class="fa-solid fa-ticket"></i> Lapor & Ticketing</button></div>
+<button class="md:hidden bg-slate-900 text-white px-4 py-2 rounded-full text-xs font-bold b" onclick="bukaLapor()"><i class="fa-solid fa-ticket"></i> Lapor</button>
 </div></nav>
 <div class="bg-white min-h-screen">
 <div class="relative pt-32 pb-20 md:pt-48 md:pb-32 bg-slate-50 border-b border-slate-100 overflow-hidden">
@@ -52,355 +47,647 @@ body{background:#f8fafc;margin:0;-webkit-tap-highlight-color:transparent;color:#
 <h1 class="text-[40px] md:text-[72px] font-black tracking-tight leading-[1.05] mb-6">Layanan Terpadu<br>Trantibum <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">Bangkalan.</span></h1>
 <p class="text-[16px] md:text-xl text-slate-500 font-medium max-w-2xl mx-auto mb-10">Platform pelaporan gangguan trantibum masyarakat dan transparansi kinerja operasional Satpol PP secara real-time.</p>
 <div class="flex flex-col sm:flex-row items-center gap-4">
-<button class="w-full sm:w-auto bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 px-8 shadow-btnDark bouncy-active" onclick="bukaLaporPublik()"><i class="fa-solid fa-bullhorn"></i> Buat Laporan Pengaduan</button>
-<a class="w-full sm:w-auto bg-white border border-slate-200 text-slate-700 text-[16px] font-bold rounded-2xl py-4 px-8 bouncy-active" href="#statistik"><i class="fa-solid fa-chart-pie text-blue-500"></i> Lihat Transparansi</a>
-</div></div></div>
+<button class="w-full sm:w-auto bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 px-8 b flex justify-center items-center gap-3" onclick="bukaLapor()"><i class="fa-solid fa-bullhorn"></i> Buat Laporan Pengaduan</button>
+<a class="w-full sm:w-auto bg-white border border-slate-200 text-slate-700 text-[16px] font-bold rounded-2xl py-4 px-8 b flex justify-center items-center gap-3" href="#statistik"><i class="fa-solid fa-chart-pie text-blue-500"></i> Lihat Transparansi</a></div>
+</div></div>
 <div class="py-20 max-w-7xl mx-auto px-6" id="statistik">
 <div class="text-center mb-16"><h2 class="text-3xl md:text-4xl font-black mb-4">Transparansi Kinerja</h2><p class="text-[15px] text-slate-500 max-w-2xl mx-auto">Data statistik giat operasional yang ditarik langsung dari Command Center.</p></div>
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" id="public-counters">
-<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Giat</p><h3 class="text-4xl font-black" id="pub-stat-giat">0</h3></div>
-<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Temuan Lapangan</p><h3 class="text-4xl font-black" id="pub-stat-temuan">0</h3></div>
-<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Barang Sitaan</p><h3 class="text-4xl font-black" id="pub-stat-sita">0</h3></div>
-<div class="bg-slate-50 p-6 rounded-[24px] border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tindak Lanjut</p><h3 class="text-4xl font-black text-emerald-500">100%</h3></div>
-</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+<div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Giat</p><h3 class="text-4xl font-black" id="pub-giat">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Temuan Lapangan</p><h3 class="text-4xl font-black" id="pub-temuan">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Barang Sitaan</p><h3 class="text-4xl font-black" id="pub-sita">0</h3></div>
+<div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center"><p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-1">Tindak Lanjut</p><h3 class="text-4xl font-black text-emerald-500">100%</h3></div></div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-soft"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Tren Giat Harian</h4><div class="relative h-64"><canvas id="publicChartTren"></canvas></div></div>
-<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-soft"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Kategori Penindakan</h4><div class="relative h-64"><canvas id="publicChartKategori"></canvas></div></div>
-</div></div>
+<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Tren Giat Harian</h4><div class="relative h-64"><canvas id="pubTren"></canvas></div></div>
+<div class="bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm"><h4 class="text-sm font-black uppercase tracking-widest mb-6 text-center">Kategori Penindakan</h4><div class="relative h-64"><canvas id="pubKat"></canvas></div></div></div></div>
 <div class="py-20 bg-slate-900" id="galeri">
 <div class="max-w-7xl mx-auto px-6">
 <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
 <div><h2 class="text-3xl md:text-4xl font-black text-white mb-3">Dokumentasi Lapangan</h2><p class="text-[15px] text-slate-400 max-w-xl">Arsip foto kegiatan penertiban dan patroli terbaru.</p></div>
 <div class="text-emerald-400 text-sm font-bold flex items-center gap-2 bg-emerald-400/10 px-4 py-2 rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Update</div></div>
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="public-gallery-grid"><div class="col-span-full py-12 text-center text-slate-500"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Memuat Galeri...</div></div>
-</div></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="pub-galeri"></div></div></div>
 <footer class="bg-black text-white py-12"><div class="max-w-7xl mx-auto px-6 text-center">
-<div class="w-14 h-14 bg-white/10 rounded-[16px] flex items-center justify-center text-2xl mx-auto mb-6"><i class="fa-solid fa-shield-halved"></i></div>
+<div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6"><i class="fa-solid fa-shield-halved"></i></div>
 <h2 class="text-xl font-black mb-2">SIGAP PRAJA</h2><p class="text-xs text-slate-400 uppercase tracking-widest mb-8">Satpol PP Kab. Bangkalan</p>
 <p class="text-[12px] font-bold text-slate-600 uppercase tracking-widest">© 2026 Pemerintah Kabupaten Bangkalan.</p></div></footer>
-</div></div>
-
-<!-- ============ LAPOR PUBLIK ============ -->
-<div class="fixed inset-0 z-[100] hidden flex-col bg-slate-50 overflow-y-auto w-full" id="view-lapor-publik">
+</div>
+<!-- LAPOR PUBLIK -->
+<div class="fixed inset-0 z-[100] hidden flex-col bg-slate-50 overflow-y-auto" id="view-lapor">
 <header class="bg-white px-6 py-5 sticky top-0 z-40 shadow-sm border-b border-slate-200"><div class="max-w-3xl mx-auto flex justify-between items-center">
-<div class="flex items-center gap-4"><button class="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 bouncy-active" onclick="tutupLaporPublik()"><i class="fa-solid fa-arrow-left"></i></button>
+<div class="flex items-center gap-4"><button class="w-10 h-10 rounded-full bg-slate-50 b" onclick="tutupLapor()"><i class="fa-solid fa-arrow-left"></i></button>
 <div><h1 class="text-[18px] font-black leading-tight">Pusat Pengaduan</h1><p class="text-[11px] font-bold text-red-500 mt-0.5">Layanan & Ticketing</p></div></div></div></header>
 <div class="max-w-3xl mx-auto w-full px-6 py-8 flex-grow">
 <div class="flex bg-slate-200 p-1 rounded-2xl mb-8">
-<button class="flex-1 py-3 text-[13px] font-bold rounded-xl bg-white shadow-sm" id="tab-buat-lapor" onclick="switchTabPublik('buat')">Buat Aduan Baru</button>
-<button class="flex-1 py-3 text-[13px] font-bold rounded-xl text-slate-500" id="tab-cek-tiket" onclick="switchTabPublik('cek')">Cek Status Tiket</button></div>
-<div class="bg-white rounded-[32px] border border-slate-100 shadow-soft overflow-hidden" id="konten-buat-lapor">
-<div class="p-6 md:p-8 space-y-6" id="step-aduan-1">
+<button class="flex-1 py-3 text-[13px] font-bold rounded-xl bg-white shadow-sm" id="tab-buat" onclick="tabPublik('buat')">Buat Aduan Baru</button>
+<button class="flex-1 py-3 text-[13px] font-bold rounded-xl text-slate-500" id="tab-cek" onclick="tabPublik('cek')">Cek Status Tiket</button></div>
+<div class="bg-white rounded-[32px] border border-slate-100 shadow-sm overflow-hidden" id="konten-buat">
+<div class="p-6 md:p-8 space-y-6" id="step-1">
 <h2 class="text-[20px] font-black flex items-center gap-2"><i class="fa-solid fa-bullhorn text-red-500"></i> Laporkan Kejadian</h2>
 <label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Kategori Gangguan</label>
-<select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-kategori">
+<select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="ad-kat">
 <option>PKL Mengganggu Ketertiban</option><option>Anak Jalanan / Pengemis</option><option>Reklame / Banner Liar</option><option>Gangguan Lingkungan / Bising</option><option>Lainnya</option></select>
-<div class="flex justify-between items-center mb-2"><label class="text-[12px] font-bold text-slate-500 uppercase">Lokasi Kejadian</label><button class="text-[10px] font-bold text-white bg-jagoDark px-3 py-1.5 rounded-lg bouncy-active" onclick="lacakGPSAduan()"><i class="fa-solid fa-location-crosshairs"></i> Lacak GPS</button></div>
-<textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4 resize-none" id="input-aduan-lokasi" placeholder="Detail lokasi, nama jalan, patokan..." rows="2"></textarea>
-<input id="input-aduan-koordinat" type="hidden">
-<button class="w-full bg-jagoDark text-white text-[15px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="ubahStepAduan(2)">Lanjut Isi Detail <i class="fa-solid fa-arrow-right"></i></button>
-</div>
-<div class="p-6 md:p-8 space-y-6 hidden" id="step-aduan-2">
-<button class="text-[12px] font-bold text-slate-400 flex items-center gap-1" onclick="ubahStepAduan(1)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
+<div class="flex justify-between items-center mb-2"><label class="text-[12px] font-bold text-slate-500 uppercase">Lokasi Kejadian</label>
+<button class="text-[10px] font-bold text-white bg-slate-900 px-3 py-1.5 rounded-lg b" onclick="gps('ad-lok','ad-koord')"><i class="fa-solid fa-location-crosshairs"></i> Lacak GPS</button></div>
+<textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4 resize-none" id="ad-lok" rows="2" placeholder="Detail lokasi, nama jalan, patokan..."></textarea>
+<input type="hidden" id="ad-koord">
+<button class="w-full bg-slate-900 text-white text-[15px] font-bold rounded-2xl py-4 b" onclick="ubahStep(2)">Lanjut Isi Detail <i class="fa-solid fa-arrow-right"></i></button></div>
+<div class="p-6 md:p-8 space-y-6 hidden" id="step-2">
+<button class="text-[12px] font-bold text-slate-400 flex items-center gap-1" onclick="ubahStep(1)"><i class="fa-solid fa-arrow-left"></i> Kembali</button>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Anda</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-nama" type="text"></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">No. WhatsApp</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-aduan-hp" type="number"></div></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Anda</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="ad-nama" type="text"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">No. WhatsApp</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="ad-hp" type="number"></div></div>
 <label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Deskripsi Kejadian</label>
-<textarea class="w-full bg-white border border-slate-200 text-[14px] font-medium rounded-xl py-3 px-4 resize-none" id="input-aduan-deskripsi" rows="3"></textarea>
-<input accept="image/*" class="hidden" id="input-aduan-foto" onchange="prosesFotoAduan(event)" type="file">
-<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-4 rounded-xl flex items-center justify-center gap-2 bouncy-active" id="btn-aduan-foto" onclick="document.getElementById('input-aduan-foto').click()"><i class="fa-solid fa-camera text-lg"></i> Lampirkan Foto</button>
-<div class="hidden relative w-full h-40 bg-slate-100 rounded-xl border border-slate-200 overflow-hidden" id="preview-aduan-container">
-<img class="w-full h-full object-cover" id="preview-img-aduan">
-<button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoAduan()"><i class="fa-solid fa-trash text-xs"></i></button></div>
-<button class="w-full bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnKirimAduan" onclick="kirimAduan()"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan Sekarang</button>
-</div></div>
-<div class="hidden bg-white p-6 md:p-8 rounded-[32px] border border-slate-100 shadow-soft flex-col min-h-[400px]" id="konten-cek-tiket">
-<h2 class="text-[20px] font-black mb-2 text-center">Lacak Status Laporan</h2>
+<textarea class="w-full bg-white border border-slate-200 text-[14px] rounded-xl py-3 px-4 resize-none" id="ad-desk" rows="3"></textarea>
+<input type="file" accept="image/*" class="hidden" id="ad-foto" onchange="fotoAduan(event)">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-4 rounded-xl flex items-center justify-center gap-2 b" id="btn-ad-foto" onclick="document.getElementById('ad-foto').click()"><i class="fa-solid fa-camera"></i> Lampirkan Foto</button>
+<div class="hidden relative w-full h-40 bg-slate-100 rounded-xl border border-slate-200 overflow-hidden" id="ad-prev-wrap">
+<img class="w-full h-full object-cover" id="ad-prev">
+<button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full b" onclick="hapusFotoAduan()"><i class="fa-solid fa-trash text-xs"></i></button></div>
+<button class="w-full bg-red-600 text-white text-[16px] font-bold rounded-2xl py-4 b" id="btnKirimAduan" onclick="kirimAduan()"><i class="fa-solid fa-paper-plane"></i> Kirim Laporan Sekarang</button></div></div>
+<div class="hidden bg-white p-6 md:p-8 rounded-[32px] border border-slate-100 shadow-sm flex-col min-h-[400px]" id="konten-cek">
+<div class="text-center mb-8"><h2 class="text-[20px] font-black mb-2">Lacak Status Laporan</h2><p class="text-[13px] text-slate-500 max-w-sm mx-auto">Masukkan Nomor Tiket, atau lihat daftar antrean aduan publik.</p></div>
 <div class="w-full max-w-md mx-auto relative mb-4 flex items-center bg-slate-50 border border-slate-200 rounded-2xl px-4">
 <span class="font-black text-slate-400 mr-3 border-r border-slate-200 pr-3 py-4"><i class="fa-solid fa-ticket mr-2"></i>TKT -</span>
-<input class="w-full bg-transparent text-[16px] font-black tracking-widest py-4 focus:outline-none" id="input-cek-tiket" inputmode="numeric" placeholder="123456"></div>
-<button class="w-full max-w-md mx-auto bg-jagoDark text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active flex justify-center" onclick="cekStatusTiket()">Cari Laporan Saya</button>
+<input class="w-full bg-transparent text-[16px] font-black tracking-widest py-4 focus:outline-none" id="cek-tiket" inputmode="numeric" placeholder="123456"></div>
+<button class="w-full max-w-md mx-auto bg-slate-900 text-white text-[15px] font-bold rounded-2xl py-4 b flex justify-center" onclick="cekTiket()">Cari Laporan Saya</button>
 <div class="mt-10 pt-8 border-t border-slate-100">
 <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-[15px]"><i class="fa-solid fa-list-ul mr-2 text-slate-400"></i> Daftar Laporan Terbaru</h3>
-<button class="text-[11px] font-bold text-blue-500 bg-blue-50 px-3 py-1.5 rounded-lg bouncy-active" onclick="renderDaftarTiketWarga()"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button></div>
-<div class="space-y-3" id="list-semua-tiket"></div></div>
-</div></div></div>
-
-<!-- ============ MODAL TRACKER WARGA ============ -->
-<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-tracker">
-<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-tracker-content">
+<button class="text-[11px] font-bold text-blue-500 bg-blue-50 px-3 py-1.5 rounded-lg b" onclick="renderTiketWarga()"><i class="fa-solid fa-rotate mr-1"></i> Refresh</button></div>
+<div class="space-y-3" id="list-tiket"></div></div></div></div>
+<!-- TRACKER MODAL -->
+<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-tracker">
+<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-tracker-c">
 <div class="bg-slate-50 p-6 border-b border-slate-100 flex justify-between items-start">
-<div><span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Detail Tiket</span><h2 class="text-[20px] font-black mt-1" id="trk-id">TKT-XXXXXX</h2></div>
-<button class="w-8 h-8 bg-white border border-slate-200 text-slate-400 rounded-full bouncy-active" onclick="tutupModalTracker()"><i class="fa-solid fa-xmark"></i></button></div>
+<div><span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Detail Tiket</span><h2 class="text-[20px] font-black mt-1" id="trk-id">TKT-</h2></div>
+<button class="w-8 h-8 bg-white border border-slate-200 text-slate-400 rounded-full b" onclick="tutupTracker()"><i class="fa-solid fa-xmark"></i></button></div>
 <div class="p-6 overflow-y-auto hide-scroll">
-<h3 class="font-bold text-[14px] mb-1" id="trk-kategori">Kategori</h3><p class="text-[12px] text-slate-500 mb-6" id="trk-lokasi">Lokasi</p>
+<h3 class="font-bold text-[14px] mb-1" id="trk-kat"></h3><p class="text-[12px] text-slate-500 mb-6" id="trk-lok"></p>
 <div class="relative pl-4 space-y-5 border-l-2 border-slate-200" id="trk-timeline"></div>
-<div class="hidden mt-8 pt-6 border-t border-slate-100" id="trk-progress-area">
+<div class="hidden mt-8 pt-6 border-t border-slate-100" id="trk-prog-area">
 <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">Dokumentasi Tindak Lanjut</h4>
-<img class="w-full h-40 object-cover rounded-2xl border border-slate-200 mb-3" id="trk-img-progress" src="">
-<div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl"><p class="text-[12px] font-medium text-blue-900 italic" id="trk-teks-progress"></p></div></div>
-</div></div></div>
+<img class="w-full h-40 object-cover rounded-2xl border border-slate-200 mb-3" id="trk-prog-foto">
+<div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl"><p class="text-[12px] font-medium text-blue-900 italic" id="trk-prog-teks"></p></div></div></div></div></div>
+</div>
 
-<!-- ============ SHELL APLIKASI (LOGIN & DASHBOARD) ============ -->
-<div class="hidden flex-col min-h-[100dvh] bg-white z-[70] fixed w-full items-center justify-center" id="view-loading">
-<div class="w-20 h-20 bg-white rounded-[24px] shadow-soft flex items-center justify-center mb-6 border border-slate-50"><div class="loader"></div></div>
+<!-- ============ LOGIN ============ -->
+<div id="page-login" class="hidden">
+<div class="flex flex-col items-center justify-center min-h-[100dvh] bg-white z-[70] fixed w-full" id="view-loading">
+<div class="w-20 h-20 bg-white rounded-3xl shadow-sm flex items-center justify-center mb-6 border border-slate-50"><div class="loader"></div></div>
 <h1 class="text-2xl font-black tracking-tight">SIGAP PRAJA</h1><p class="text-[12px] font-bold text-slate-400 mt-2 tracking-widest uppercase">Menyinkronkan Data...</p></div>
-
 <div class="hidden flex-col min-h-[100dvh] bg-white relative w-full max-w-md mx-auto" id="view-login">
-<div class="px-8 flex-grow flex flex-col justify-center pb-12">
-<div class="w-16 h-16 bg-jagoDark text-white rounded-[20px] flex items-center justify-center text-3xl shadow-soft mb-8"><i class="fa-solid fa-shield-halved"></i></div>
+<div class="px-8 flex-grow flex flex-col justify-center w-full pb-12">
+<div class="w-16 h-16 bg-slate-900 text-white rounded-[20px] flex items-center justify-center text-3xl shadow-sm mb-8"><i class="fa-solid fa-shield-halved"></i></div>
 <h1 class="text-[40px] font-black leading-[1.05] tracking-tight">Portal<br>Operasional</h1>
 <p class="text-[15px] font-medium text-slate-500 mt-5">Sistem Informasi Gangguan & Penertiban Praja. Satpol PP Kab. Bangkalan.</p>
-<form class="mt-10" id="loginForm" onsubmit="event.preventDefault(); prosesLogin(event);">
-<div class="glass-card rounded-[28px] p-2.5 shadow-soft border border-slate-100">
-<div class="bg-jagoBg rounded-[20px] flex items-center px-5 py-4 mb-2.5"><i class="fa-regular fa-id-badge text-slate-400 text-xl mr-4"></i><input autocomplete="off" class="w-full bg-transparent text-[16px] font-bold focus:outline-none" id="login-nama" placeholder="ID Tim (cth: tim2)" required type="text"></div>
-<div class="bg-jagoBg rounded-[20px] flex items-center px-5 py-4"><i class="fa-solid fa-lock text-slate-400 text-xl mr-4"></i><input class="w-full bg-transparent text-[16px] font-black tracking-widest focus:outline-none" id="login-pin" placeholder="PIN Akses" required type="password"></div></div>
-<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 mt-8 shadow-btnDark bouncy-active" id="btnLogin" type="submit">Masuk Sistem <i class="fa-solid fa-arrow-right ml-1"></i></button>
-<button class="w-full bg-slate-100 text-slate-700 text-[16px] font-bold rounded-2xl py-4 mt-3 bouncy-active" onclick="bukaMenuPetugasUmum()" type="button"><i class="fa-solid fa-users-line"></i> Masuk Petugas Umum</button>
-</form></div></div>
+<form class="mt-10" onsubmit="event.preventDefault();prosesLogin(event)">
+<div class="bg-white/95 backdrop-blur rounded-[28px] p-2.5 shadow-sm border border-slate-100">
+<div class="bg-slate-50 rounded-[20px] flex items-center px-5 py-4 mb-2.5"><i class="fa-regular fa-id-badge text-slate-400 text-xl mr-4"></i>
+<input class="w-full bg-transparent text-[16px] font-bold focus:outline-none" id="login-nama" placeholder="ID Tim (cth: tim2)" required></div>
+<div class="bg-slate-50 rounded-[20px] flex items-center px-5 py-4"><i class="fa-solid fa-lock text-slate-400 text-xl mr-4"></i>
+<input class="w-full bg-transparent text-[16px] font-black tracking-widest focus:outline-none" id="login-pin" placeholder="Password Auth" required type="password"></div></div>
+<button class="w-full bg-slate-900 text-white text-[16px] font-bold rounded-2xl py-4 mt-8 b flex justify-center items-center gap-2" id="btnLogin">Masuk Sistem <i class="fa-solid fa-arrow-right ml-1"></i></button>
+<button class="w-full bg-slate-100 text-slate-700 text-[16px] font-bold rounded-2xl py-4 mt-3 b flex justify-center items-center gap-2" type="button" onclick="masukUmum()"><i class="fa-solid fa-users-line"></i> Masuk Petugas Umum</button>
+<p class="text-[11px] text-slate-400 text-center mt-4">Login memakai email <b>idtim@satpolpp.go.id</b> + password Supabase Auth.</p>
+</form></div></div></div>
 
-<!-- DASHBOARD PATROLI -->
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-dashboard">
+<!-- ============ PATROLI ============ -->
+<div id="page-patroli" class="hidden">
+<div class="w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="pv-dashboard">
 <header class="bg-white px-6 py-6 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2"><div class="flex justify-between items-center">
 <div><h1 class="text-[22px] font-black leading-none">SIGAP PRAJA</h1><p class="text-[11px] font-bold text-slate-400 tracking-widest uppercase mt-1">Satpol PP Bangkalan</p></div>
 <div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center font-black text-sm border border-slate-100" id="dash-avatar">T1</div>
-<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></div></div></header>
+<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full b" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></div></div></header>
 <div class="px-6 pt-4">
-<div class="hidden bg-orange-50 border border-orange-200/60 rounded-[24px] p-5 flex items-center justify-between shadow-soft mb-8 bouncy-active" id="alert-draft" onclick="lanjutkanPatroli()">
-<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-jagoOrange rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
-<div><p class="text-[15px] font-bold leading-tight">Giat Tim Sedang Berjalan!</p><p class="text-[12px] font-medium text-slate-500 mt-0.5" id="text-draft-sync">Tap untuk memantau.</p></div></div>
+<div class="hidden bg-orange-50 border border-orange-200/60 rounded-3xl p-5 flex items-center justify-between shadow-sm mb-8 b" id="alert-draft" onclick="lanjutPatroli()">
+<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-orange-600 rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
+<div><p class="text-[15px] font-bold leading-tight">Giat Tim Sedang Berjalan!</p><p class="text-[12px] font-medium text-slate-500 mt-0.5" id="text-draft">Tap untuk memantau.</p></div></div>
 <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></div></div>
 <h2 class="text-[18px] font-extrabold mb-5 px-1">Giat Operasional</h2>
 <div class="grid grid-cols-2 gap-4">
-<div class="bg-white rounded-[28px] p-6 shadow-soft border border-slate-50 bouncy-active flex flex-col items-start" onclick="bukaPersiapanPatroli()"><div class="w-14 h-14 bg-slate-50 rounded-[18px] flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-truck-fast"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Patroli<br><span class="text-slate-400 font-semibold text-[13px]">Log Book Giat</span></h3></div>
-<div class="bg-white rounded-[28px] p-6 shadow-soft border border-slate-50 bouncy-active flex flex-col items-start" onclick="bukaFormSitaan()"><div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-[18px] flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-boxes-stacked"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Barang Bukti<br><span class="text-slate-400 font-semibold text-[13px]">Input Sitaan</span></h3></div>
-</div></div></div>
-
-<!-- TIMELINE PATROLI AKTIF -->
-<div class="hidden flex-col min-h-[100dvh] bg-jagoBg relative w-full max-w-md mx-auto z-[50]" id="view-patroli-aktif">
+<div class="bg-white rounded-[28px] p-6 shadow-sm border border-slate-50 b flex flex-col items-start" onclick="bukaPersiapan()"><div class="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-truck-fast"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Patroli<br><span class="text-slate-400 font-semibold text-[13px]">Log Book Giat</span></h3></div>
+<div class="bg-white rounded-[28px] p-6 shadow-sm border border-slate-50 b flex flex-col items-start" onclick="bukaSitaan()"><div class="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-2xl mb-5"><i class="fa-solid fa-boxes-stacked"></i></div><h3 class="font-extrabold text-[16px] leading-tight">Barang Bukti<br><span class="text-slate-400 font-semibold text-[13px]">Input Sitaan</span></h3></div></div></div></div>
+<div class="hidden flex-col min-h-[100dvh] bg-slate-50 relative w-full max-w-md mx-auto z-[50]" id="pv-aktif">
 <header class="bg-white px-5 py-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
-<div class="flex items-center"><button class="w-12 h-12 rounded-full bouncy-active bg-slate-50" onclick="konfirmasiKeluarPatroli()"><i class="fa-solid fa-arrow-left text-xl"></i></button>
-<div class="ml-3"><h1 class="text-[18px] font-black leading-tight">Giat Berlangsung</h1><p class="text-[12px] font-bold text-orange-500 flex items-center gap-1.5 mt-0.5" id="status-sync-cloud"><i class="fa-solid fa-cloud-arrow-up"></i> Server Terhubung</p></div></div>
-<div class="flex gap-2"><button class="w-10 h-10 rounded-full bg-red-50 border border-red-100 text-red-500 bouncy-active" onclick="hapusDraftPatroli()"><i class="fa-solid fa-trash-can"></i></button>
-<button class="bg-jagoDark text-white text-[13px] font-bold px-5 py-2.5 rounded-full bouncy-active shadow-btnDark" id="btnKirimSemua" onclick="kirimSemuaLaporan()">Kirim Laporan</button></div></header>
+<div class="flex items-center"><button class="w-12 h-12 rounded-full b bg-slate-50" onclick="konfirmasiKeluar()"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+<div class="ml-3"><h1 class="text-[18px] font-black leading-tight">Giat Berlangsung</h1><p class="text-[12px] font-bold text-orange-500 flex items-center gap-1.5 mt-0.5" id="sync-cloud"><i class="fa-solid fa-cloud-arrow-up"></i> Server Terhubung</p></div></div>
+<div class="flex gap-2"><button class="w-10 h-10 rounded-full bg-red-50 border border-red-100 text-red-500 b" onclick="hapusDraft()"><i class="fa-solid fa-trash-can"></i></button>
+<button class="bg-slate-900 text-white text-[13px] font-bold px-5 py-2.5 rounded-full b" id="btnKirimSemua" onclick="kirimLaporan()">Kirim Laporan</button></div></header>
 <div class="flex-grow px-6 py-8 overflow-y-auto pb-36">
-<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="timeline-kosong"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Log Book Kosong.</p></div>
-<div class="space-y-5 relative" id="timeline-list"></div></div>
-<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-jagoOrange text-white font-bold py-4 rounded-full shadow-btnOrange bouncy-active flex justify-center items-center gap-2 text-[16px]" onclick="bukaFormTemuan()"><i class="fa-solid fa-plus"></i> Tambah Temuan</button></div></div>
+<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="tl-kosong"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Log Book Kosong.</p></div>
+<div class="space-y-5 relative" id="tl-list"></div></div>
+<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-orange-600 text-white font-bold py-4 rounded-full b flex justify-center items-center gap-2" onclick="bukaTemuan()"><i class="fa-solid fa-plus"></i> Tambah Temuan</button></div></div>
+<div class="hidden w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="pv-riwayat">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Riwayat Giat</h1></header>
+<div class="px-6 pt-4 space-y-4" id="wrap-riwayat"></div></div>
+<div class="hidden w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="pv-anggota">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Anggota Tim</h1></header>
+<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-sm border border-slate-50 mb-8">
+<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="in-anggota" placeholder="Nama Lengkap Personel">
+<button class="bg-slate-900 text-white w-14 h-14 rounded-2xl font-bold b flex-shrink-0 flex items-center justify-center" onclick="tambahAnggota()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
+<div class="space-y-3" id="list-anggota"></div></div></div>
+<nav class="fixed bottom-6 w-full max-w-md left-1/2 -translate-x-1/2 px-6 z-[60]" id="main-nav">
+<div class="bg-white/95 backdrop-blur rounded-[28px] shadow-lg p-2 flex justify-around items-center border border-white/80">
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="patroliNav('pv-dashboard')"><i class="fa-solid fa-house text-[18px] mb-1" id="pn-beranda"></i><span class="text-[9px] font-bold" id="pt-beranda">Beranda</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="patroliNav('pv-riwayat')"><i class="fa-solid fa-box-archive text-[18px] mb-1 text-slate-400" id="pn-riwayat"></i><span class="text-[9px] font-bold text-slate-400" id="pt-riwayat">Riwayat</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="patroliNav('pv-anggota')"><i class="fa-solid fa-users text-[18px] mb-1 text-slate-400" id="pn-anggota"></i><span class="text-[9px] font-bold text-slate-400" id="pt-anggota">Anggota</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="patroliNav('pv-skp')"><i class="fa-solid fa-folder-open text-[18px] mb-1 text-slate-400" id="pn-skp"></i><span class="text-[9px] font-bold text-slate-400" id="pt-skp">SKP</span></button></div></nav>
+</div>
 
-<!-- SHEET PERSIAPAN PATROLI -->
+<!-- ============ ADMIN ============ -->
+<div id="page-admin" class="hidden">
+<div class="w-full bg-slate-50 min-h-[100dvh] flex-col pb-24" id="av-dashboard">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
+<div><h1 class="text-xl md:text-2xl font-black flex items-center gap-3"><i class="fa-solid fa-shield-halved text-orange-600"></i> COMMAND CENTER</h1><p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase mt-1">Executive Panel</p></div>
+<div class="flex items-center gap-4"><button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full b border border-slate-200" onclick="loadAll(true).then(renderAdmin)"><i class="fa-solid fa-rotate"></i></button>
+<button class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-sm font-bold b" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar</button></div></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-8 space-y-6">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm"><div class="w-10 h-10 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mb-3"><i class="fa-solid fa-folder-open"></i></div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Giat</p><h2 class="text-3xl font-black mt-1" id="st-giat">0</h2></div>
+<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm"><div class="w-10 h-10 bg-orange-50 text-orange-500 rounded-full flex items-center justify-center mb-3"><i class="fa-solid fa-clipboard-list"></i></div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Temuan</p><h2 class="text-3xl font-black mt-1" id="st-temuan">0</h2></div>
+<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm"><div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-3"><i class="fa-solid fa-boxes-stacked"></i></div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Brg Bukti</p><h2 class="text-3xl font-black mt-1" id="st-sita">0</h2></div>
+<div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm"><div class="w-10 h-10 bg-red-50 text-red-500 rounded-full flex items-center justify-center mb-3"><i class="fa-solid fa-skull-crossbones"></i></div><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Blacklist</p><h2 class="text-3xl font-black mt-1" id="st-bl">0</h2></div></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex items-center justify-between"><div class="flex items-center gap-3"><i class="fa-solid fa-filter text-blue-500"></i><span class="text-[11px] font-extrabold text-blue-800 uppercase tracking-widest">Filter Giat</span></div>
+<select class="w-full max-w-[200px] bg-white border border-blue-200 text-[12px] font-bold rounded-xl px-3 py-2 outline-none" id="filter-kat" onchange="renderAdmin()"><option value="ALL">Semua Kategori</option></select></div>
+<div class="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-3 h-3 bg-red-500 rounded-full animate-ping"></div><span class="text-[11px] font-extrabold text-red-800 uppercase tracking-widest">Live Giat Tim</span></div>
+<div class="flex flex-wrap gap-2 justify-end" id="st-tim"></div></div></div>
+<div class="bg-white p-5 rounded-[28px] border border-slate-100 shadow-sm"><h3 class="text-sm font-black uppercase tracking-widest mb-4"><i class="fa-solid fa-map-location-dot text-emerald-500 mr-2"></i> Pemetaan Lokasi Giat</h3>
+<div class="w-full h-[400px] rounded-2xl bg-slate-100 border border-slate-200 relative z-10" id="adminMap"></div></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-sm md:col-span-2"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Tren Giat</h3><div class="relative h-64"><canvas id="chTren"></canvas></div></div>
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-sm"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Komposisi</h3><div class="relative h-64"><canvas id="chKat"></canvas></div></div>
+<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-sm md:col-span-3"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Kinerja Per Tim</h3><div class="relative h-64"><canvas id="chTim"></canvas></div></div></div></div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="av-sita">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200"><h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-boxes-stacked text-blue-500"></i> GUDANG SITA</h1>
+<button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full b border border-slate-200" onclick="loadAll(false).then(renderSita)"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="wrap-sita"></div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="av-black">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200"><h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-skull-crossbones text-red-500"></i> DB BLACKLIST</h1>
+<div class="flex gap-3"><button class="bg-slate-900 text-white px-4 py-2 rounded-xl text-sm font-bold b" onclick="bukaBlacklist()"><i class="fa-solid fa-plus"></i> Tambah</button>
+<button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full b border border-slate-200" onclick="loadAll(false).then(renderBlacklist)"><i class="fa-solid fa-rotate"></i></button></div></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="wrap-black"></div></div>
+<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="av-aduan">
+<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200"><h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-headset text-red-500"></i> PUSAT ADUAN</h1>
+<button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full b border border-slate-200" onclick="sinkronAduan()"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="max-w-6xl mx-auto w-full px-6 pt-6">
+<div class="flex bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm mb-6 max-w-md">
+<button class="flex-1 py-2 text-[12px] font-bold rounded-lg bg-slate-900 text-white" id="tab-aduan-baru" onclick="filterAduan('Antrean')">Baru Masuk</button>
+<button class="flex-1 py-2 text-[12px] font-bold rounded-lg text-slate-500" id="tab-aduan-proses" onclick="filterAduan('Diproses')">Diproses / Selesai</button></div>
+<div id="wrap-aduan"></div></div></div>
+<nav class="fixed bottom-6 w-full max-w-xl left-1/2 -translate-x-1/2 px-4 z-40" id="admin-nav">
+<div class="bg-white/90 backdrop-blur rounded-[28px] shadow-lg p-2 flex justify-between items-center border border-slate-200/80">
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="adminNav('av-dashboard')"><i class="fa-solid fa-chart-pie text-[18px] mb-1" id="an-dash"></i><span class="text-[9px] font-bold" id="at-dash">Dash</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="adminNav('av-sita')"><i class="fa-solid fa-boxes-stacked text-[18px] mb-1 text-slate-400" id="an-sita"></i><span class="text-[9px] font-bold text-slate-400" id="at-sita">Gudang</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="adminNav('av-black')"><i class="fa-solid fa-skull-crossbones text-[18px] mb-1 text-slate-400" id="an-black"></i><span class="text-[9px] font-bold text-slate-400" id="at-black">Blacklist</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="adminNav('av-skp')"><i class="fa-solid fa-folder-open text-[18px] mb-1 text-slate-400" id="an-skp"></i><span class="text-[9px] font-bold text-slate-400" id="at-skp">SKP</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="adminNav('av-aduan')"><i class="fa-solid fa-headset text-[18px] mb-1 text-slate-400" id="an-aduan"></i><span class="text-[9px] font-bold text-slate-400" id="at-aduan">Aduan</span></button></div></nav>
+</div>
+
+<!-- ============ UMUM ============ -->
+<div id="page-umum" class="hidden">
+<div class="w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="uv-dashboard">
+<header class="bg-white px-6 py-6 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
+<div><h1 class="text-[22px] font-black leading-none">PETUGAS UMUM</h1><p class="text-[11px] font-bold text-slate-400 tracking-widest uppercase mt-1">Satpol PP Bangkalan</p></div>
+<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full b" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></header>
+<div class="px-6 pt-4">
+<button class="w-full mb-6 bg-orange-50 border border-orange-200/60 rounded-3xl p-5 flex items-center justify-between shadow-sm b" onclick="umumNav('uv-draft')">
+<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-orange-600 rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div>
+<div><p class="text-[15px] font-bold leading-tight text-left">Daftar Logbook Aktif</p><p class="text-[12px] font-medium text-slate-500 mt-0.5 text-left" id="umum-count">Melihat giat bersama</p></div></div>
+<div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></div></button>
+<h2 class="text-[18px] font-extrabold mb-4 px-1">Pilih Kategori Kegiatan</h2>
+<div class="grid grid-cols-2 gap-4" id="umum-kat"></div></div></div>
+<div class="hidden w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="uv-draft">
+<header class="bg-white px-6 py-5 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
+<div class="flex items-center gap-3"><button class="w-10 h-10 rounded-full bg-slate-50 b border border-slate-200" onclick="umumNav('uv-dashboard')"><i class="fa-solid fa-arrow-left"></i></button><h1 class="text-[18px] font-black">Daftar Logbook</h1></div>
+<button class="w-10 h-10 rounded-full bg-slate-50 b border border-slate-200" onclick="loadAll(false).then(renderDraftUmum)"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="px-6 pt-4 space-y-4" id="wrap-draft-umum"></div></div>
+<div class="hidden flex-col min-h-[100dvh] bg-slate-50 relative w-full max-w-md mx-auto z-[50]" id="uv-aktif">
+<header class="bg-white px-5 py-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
+<div class="flex items-center"><button class="w-12 h-12 rounded-full b bg-slate-50" onclick="umumNav('uv-dashboard')"><i class="fa-solid fa-arrow-left text-xl"></i></button>
+<div class="ml-3"><h1 class="text-[16px] font-black leading-tight truncate w-32" id="umum-judul">Logbook</h1><p class="text-[11px] font-bold text-emerald-500 mt-0.5"><i class="fa-solid fa-users mr-1"></i>Akses Bersama</p></div></div>
+<button class="bg-slate-900 text-white text-[13px] font-bold px-4 py-2 rounded-full b" onclick="kirimLaporanUmum()">Kirim Laporan</button></header>
+<div class="flex-grow px-6 py-8 overflow-y-auto pb-36">
+<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="tlu-kosong"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Belum Ada Rangkaian</p></div>
+<div class="space-y-5 relative" id="tlu-list"></div></div>
+<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-blue-600 text-white font-bold py-4 rounded-full b flex justify-center items-center gap-2" onclick="bukaTemuanUmum()"><i class="fa-solid fa-plus"></i> Rangkaian Kegiatan</button></div></div>
+<div class="hidden w-full max-w-md bg-slate-50 min-h-[100dvh] relative flex-col mx-auto pb-28" id="uv-petugas">
+<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Petugas</h1></header>
+<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-sm border border-slate-50 mb-8">
+<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="in-petugas" placeholder="Nama Lengkap Petugas">
+<button class="bg-slate-900 text-white w-14 h-14 rounded-2xl font-bold b flex-shrink-0 flex items-center justify-center" onclick="tambahPetugas()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
+<div class="space-y-3" id="list-petugas"></div></div></div>
+<nav class="fixed bottom-6 w-full max-w-md left-1/2 -translate-x-1/2 px-6 z-[60]" id="umum-nav">
+<div class="bg-white/95 backdrop-blur rounded-[28px] shadow-lg p-2 flex justify-around items-center border border-white/80">
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="umumNav('uv-dashboard')"><i class="fa-solid fa-house text-[18px] mb-1" id="un-beranda"></i><span class="text-[9px] font-bold" id="ut-beranda">Beranda</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="umumNav('uv-draft')"><i class="fa-solid fa-book-open text-[18px] mb-1 text-slate-400" id="un-logbook"></i><span class="text-[9px] font-bold text-slate-400" id="ut-logbook">Logbook</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="umumNav('uv-petugas')"><i class="fa-solid fa-users text-[18px] mb-1 text-slate-400" id="un-petugas"></i><span class="text-[9px] font-bold text-slate-400" id="ut-petugas">Petugas</span></button>
+<button class="flex-1 flex flex-col items-center py-2 b" onclick="umumNav('uv-skp')"><i class="fa-solid fa-folder-open text-[18px] mb-1 text-slate-400" id="un-skp"></i><span class="text-[9px] font-bold text-slate-400" id="ut-skp">SKP</span></button></div></nav>
+</div>
+
+<!-- ============ SKP (semua role) ============ -->
+<div class="hidden flex-col min-h-[100dvh] bg-slate-50 relative w-full md:max-w-6xl max-w-md mx-auto z-[30] pb-28" id="pv-skp">
+<header class="bg-white px-6 md:px-12 py-5 sticky top-0 z-40 shadow-sm border-b border-slate-200 mb-2 flex justify-between items-center">
+<h1 class="text-[20px] md:text-2xl font-black flex items-center gap-3"><i class="fa-solid fa-folder-open text-blue-500"></i> Arsip SKP</h1>
+<button class="w-10 h-10 rounded-full bg-slate-50 b border border-slate-200" onclick="loadAll(false).then(()=>renderSKP(true))"><i class="fa-solid fa-rotate"></i></button></header>
+<div class="px-6 md:px-12 pt-4">
+<div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pilih Bulan Giat</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4 outline-none" id="skp-bulan" onchange="renderSKP(true)"></select></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Saring Nama Petugas</label><input class="w-full bg-white border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="skp-nama" onkeyup="renderSKP(true)" placeholder="Kosongi untuk semua"></div></div>
+<h2 class="text-[15px] font-extrabold mb-4">Hasil: <span class="text-blue-500" id="skp-count">0</span> Giat</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="wrap-skp"></div></div></div>
+
+<!-- ============ SHEETS ============ -->
 <div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-persiapan">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupPersiapanPatroli()"></div>
-<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupPersiapan()"></div>
+<div class="sheet sh bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
 <div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
 <div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black">Persiapan Giat</h2><p class="text-[13px] text-slate-500 mt-1">Lengkapi personel sebelum patroli.</p></div>
 <div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
-<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Pimpinan Apel / Pengarah</label><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl py-4 px-5" id="input-pimpinan-apel" type="text"></div>
-<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Anggota Tambahan / BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="input-anggota-bko" type="text"><button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold bouncy-active" onclick="tambahAnggotaBKO()"><i class="fa-solid fa-plus"></i></button></div></div>
-<div><div class="flex justify-between items-end mb-3"><label class="text-[13px] font-bold text-slate-500 uppercase">Anggota Yang Hadir</label><button class="text-[12px] font-bold bg-slate-100 px-3 py-1 rounded-md" onclick="centangSemua()">Pilih Semua</button></div>
-<div class="grid grid-cols-1 gap-3" id="container-anggota"></div></div>
-<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="eksekusiMulaiPatroli()">Mulai Log Book</button>
-</div></div></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Pimpinan Apel / Pengarah</label><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl py-4 px-5" id="in-pimpinan"></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Anggota BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="in-bko">
+<button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold b" onclick="tambahBKO()"><i class="fa-solid fa-plus"></i></button></div></div>
+<div><div class="flex justify-between items-end mb-3"><label class="block text-[13px] font-bold text-slate-500 uppercase">Anggota Hadir</label><button class="text-[12px] font-bold bg-slate-100 px-3 py-1 rounded-md" onclick="centangSemua()">Pilih Semua</button></div>
+<div class="grid grid-cols-1 gap-3" id="wrap-check"></div></div>
+<button class="w-full bg-slate-900 text-white text-[16px] font-bold rounded-2xl py-4 b" onclick="mulaiPatroli()">Mulai Log Book</button></div></div></div>
 
-<!-- SHEET TEMUAN -->
 <div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-temuan">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormTemuan()"></div>
-<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupTemuan()"></div>
+<div class="sheet sh bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
 <div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
-<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black" id="title-form-temuan">Catat Kejadian</h2><button class="w-10 h-10 text-slate-400 bg-slate-50 rounded-full bouncy-active" onclick="tutupFormTemuan()"><i class="fa-solid fa-xmark text-xl"></i></button></div>
+<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black" id="tm-judul">Catat Kejadian</h2>
+<button class="w-10 h-10 rounded-full bg-slate-50 b" onclick="tutupTemuan()"><i class="fa-solid fa-xmark text-xl"></i></button></div>
 <div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
-<div id="group-input-fields" class="space-y-6">
-<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Jenis Kejadian</label>
-<select class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-[16px] py-4 px-4" id="input-kategori">
-<option value="Patroli|-">Patroli</option><option value="APP (Acara Perintah Pimpinan)|-">APP Pimpinan</option>
-<option value="Deteksi & Cegah Dini|Informasi Unjuk Rasa">Informasi Unjuk Rasa</option><option value="Deteksi & Cegah Dini|SIROLEG">SIROLEG</option>
-<option value="Penertiban|PKL">Penertiban PKL</option><option value="Penertiban|Banner Ilegal / Expired">Banner Ilegal</option><option value="Penertiban|Anak Jalanan">Anak Jalanan</option><option value="Penertiban|ODGJ">ODGJ</option><option value="Penertiban|Pengemis">Pengemis</option><option value="Penertiban|Rokok Ilegal">Rokok Ilegal</option>
-<option value="Pengamanan|Event / Acara">Pengamanan Event</option><option value="Pengawalan|-">Pengawalan</option></select></div>
-<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Lokasi / Koordinat</label><input id="input-koordinat" type="hidden"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-[16px] py-3.5 px-5 resize-none" id="input-lokasi-teks" rows="2"></textarea></div>
-<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Tindakan / Kronologi</label><textarea class="w-full bg-white border border-slate-200 text-[15px] font-medium rounded-[16px] py-4 px-5" id="input-keterangan" rows="3"></textarea></div></div>
-<div><input accept="image/*" capture="environment" class="hidden" id="input-kamera" onchange="prosesFotoKompresi(event)" type="file">
-<input accept="image/*" class="hidden" id="input-galeri" multiple onchange="prosesFotoKompresi(event)" type="file">
+<div class="space-y-6" id="tm-fields">
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Jenis Kejadian</label><select class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl py-4 px-4" id="tm-kat"></select></div>
+<div><div class="flex justify-between items-center mb-2"><label class="block text-[13px] font-bold text-slate-500 uppercase">Lokasi / Koordinat</label><span class="text-[11px] font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md"><i class="fa-solid fa-location-crosshairs mr-1"></i> Auto GPS</span></div>
+<input type="hidden" id="tm-koord"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-3.5 px-5 resize-none" id="tm-lok" rows="2"></textarea></div>
+<div><label class="block text-[13px] font-bold text-slate-500 uppercase mb-2">Tindakan / Kronologi</label><textarea class="w-full bg-white border border-slate-200 text-[15px] rounded-2xl py-4 px-5" id="tm-ket" rows="3"></textarea></div></div>
+<div><input type="file" accept="image/*" capture="environment" class="hidden" id="tm-kamera" onchange="fotoKompresi(event,'patroli')">
+<input type="file" accept="image/*" multiple class="hidden" id="tm-galeri" onchange="fotoKompresi(event,'patroli')">
 <div class="grid grid-cols-2 gap-3 mb-2">
-<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-kamera').click()"><i class="fa-solid fa-camera text-2xl"></i><span class="text-[12px]">Kamera + Timemark</span></button>
-<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-galeri').click()"><i class="fa-regular fa-images text-2xl text-blue-500"></i><span class="text-[12px]">Pilih Galeri</span></button></div>
-<div class="hidden mt-3 bg-[#0f172a] rounded-2xl p-3 flex justify-between items-center" id="thumbnail-bar"><span class="text-[11px] font-black text-white tracking-widest uppercase ml-1" id="thumb-count-text">0 BERKAS.</span><div class="flex gap-1 items-center" id="thumb-images-container"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusPreview()"><i class="fa-solid fa-trash"></i></button></div></div>
-<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSaveGiatAction" onclick="simpanKeTimeline()">Simpan Data</button>
-</div></div></div>
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 b" onclick="document.getElementById('tm-kamera').click()"><i class="fa-solid fa-camera text-2xl"></i><span class="text-[12px]">Kamera + Timemark</span></button>
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 b" onclick="document.getElementById('tm-galeri').click()"><i class="fa-regular fa-images text-2xl text-blue-500"></i><span class="text-[12px]">Pilih Galeri</span></button></div>
+<div class="hidden mt-3 bg-slate-900 rounded-2xl p-3 flex justify-between items-center" id="tm-bar"><span class="text-[11px] font-black text-white tracking-widest uppercase ml-1" id="tm-count">0 BERKAS.</span>
+<div class="flex gap-1 items-center" id="tm-thumbs"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusFoto('patroli')"><i class="fa-solid fa-trash"></i></button></div></div>
+<button class="w-full bg-slate-900 text-white text-[16px] font-bold rounded-2xl py-4 b" id="tm-save" onclick="simpanTemuan()">Simpan Data</button></div></div></div>
 
-<!-- SHEET SITAAN -->
 <div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-sitaan">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormSitaan()"></div>
-<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupSitaan()"></div>
+<div class="sheet sh bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
 <div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
 <div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black text-blue-600"><i class="fa-solid fa-boxes-stacked mr-2"></i> Form Sitaan</h2></div>
 <div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jenis Barang</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-jenis" type="text"></div>
-<div class="grid grid-cols-2 gap-4"><div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jumlah</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-jumlah" type="text"></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Lokasi Sita</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-sita-lokasi" type="text"></div></div>
-<div><input accept="image/*" capture="environment" class="hidden" id="input-sita-kamera" onchange="prosesFotoSita(event)" type="file">
-<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 bouncy-active" id="btn-sita-foto" onclick="document.getElementById('input-sita-kamera').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i><span class="text-[12px]">Jepret Barang Bukti</span></button>
-<div class="relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 hidden overflow-hidden" id="preview-sita-container"><img class="w-full h-full object-cover" id="preview-img-sita"><button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoSita()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
-<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSimpanSita" onclick="simpanBarangSita()"><i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Gudang Server</button>
-</div></div></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jenis Barang</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="st-jenis"></div>
+<div class="grid grid-cols-2 gap-4"><div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Jumlah</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="st-jumlah"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Lokasi</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="st-lokasi"></div></div>
+<div><input type="file" accept="image/*" capture="environment" class="hidden" id="st-kamera" onchange="fotoSita(event)">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 b" id="btn-st-foto" onclick="document.getElementById('st-kamera').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i><span class="text-[12px]">Jepret Barang Bukti</span></button>
+<div class="relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 hidden overflow-hidden" id="st-prev-wrap"><img class="w-full h-full object-cover" id="st-prev">
+<button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full b" onclick="hapusFotoSita()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
+<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 b" onclick="simpanSita()"><i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Gudang Server</button></div></div></div>
 
-<!-- RIWAYAT & ANGGOTA & SKP -->
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-history-patroli">
-<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Riwayat Giat</h1></header>
-<div class="px-6 pt-4 space-y-4" id="container-riwayat-patroli"></div></div>
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-anggota">
-<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Anggota Tim</h1></header>
-<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-soft border border-slate-50 mb-8">
-<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="input-nama-anggota" type="text"><button class="bg-jagoDark text-white w-14 h-14 rounded-2xl font-bold bouncy-active flex-shrink-0" onclick="tambahAnggotaTim()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
-<div class="space-y-3" id="list-anggota-tim"></div></div></div>
-<div class="hidden flex-col min-h-[100dvh] bg-slate-50 relative w-full md:max-w-6xl max-w-md mx-auto z-[30] pb-28" id="view-arsip-skp">
-<header class="bg-white px-6 md:px-12 py-5 sticky top-0 z-40 shadow-sm border-b border-slate-200 mb-2 flex justify-between items-center">
-<h1 class="text-[20px] md:text-2xl font-black"><i class="fa-solid fa-folder-open text-blue-500 hidden md:block"></i> Arsip SKP</h1>
-<button class="w-10 h-10 rounded-full bg-slate-50 bouncy-active border border-slate-200" onclick="fetchUsersData(false).then(()=>renderDropdownSKP())"><i class="fa-solid fa-rotate"></i></button></header>
-<div class="px-6 md:px-12 pt-4">
-<div class="bg-white p-5 rounded-[24px] shadow-soft border border-slate-100 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pilih Bulan Giat</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="filter-skp-bulan" onchange="renderArsipSKP(true)"></select></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Saring Nama Petugas</label><input class="w-full bg-white border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="filter-skp-nama" onkeyup="renderArsipSKP(true)" type="text"></div></div>
-<h2 class="text-[15px] font-extrabold mb-4">Hasil: <span class="text-blue-500" id="count-skp">0</span> Giat</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="container-arsip-skp"></div></div></div>
-
-<!-- ADMIN DASHBOARD -->
-<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-24" id="view-admin-dashboard">
-<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
-<div><h1 class="text-xl md:text-2xl font-black flex items-center gap-3"><i class="fa-solid fa-shield-halved text-jagoOrange"></i> COMMAND CENTER</h1></div>
-<div class="flex items-center gap-4"><button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full bouncy-active border border-slate-200" onclick="fetchUsersData(false).then(()=>renderAdminDashboard())"><i class="fa-solid fa-rotate"></i></button>
-<button class="bg-red-50 text-red-500 px-4 py-2 rounded-xl text-sm font-bold bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i> Keluar</button></div></header>
-<div class="max-w-6xl mx-auto w-full px-6 pt-8 space-y-6">
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Giat</p><h2 class="text-3xl font-black mt-1" id="stat-total-laporan">0</h2></div>
-<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Temuan</p><h2 class="text-3xl font-black mt-1" id="stat-total-temuan">0</h2></div>
-<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Brg Bukti</p><h2 class="text-3xl font-black mt-1" id="stat-total-sita">0</h2></div>
-<div class="bg-white p-5 rounded-[24px] border border-slate-100 shadow-soft"><p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Blacklist</p><h2 class="text-3xl font-black mt-1" id="stat-total-blacklist">0</h2></div></div>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<div class="bg-blue-50 border border-blue-100 p-4 rounded-[20px] flex items-center gap-3"><i class="fa-solid fa-filter text-blue-500"></i><select class="w-full bg-white border border-blue-200 text-[12px] font-bold rounded-xl px-3 py-2" id="filter-admin-kategori" onchange="renderAdminDashboard()"><option value="ALL">Semua Kategori</option></select></div>
-<div class="bg-red-50 border border-red-100 p-4 rounded-[20px] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-3 h-3 bg-red-500 rounded-full animate-ping"></div><span class="text-[11px] font-extrabold text-red-800 uppercase">Live Giat Tim</span></div><div class="flex flex-wrap gap-2 justify-end" id="stat-tim-aktif"></div></div></div>
-<div class="bg-white p-5 rounded-[28px] border border-slate-100 shadow-soft"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Pemetaan Lokasi Giat</h3><div class="w-full h-[400px] rounded-[20px] bg-slate-100 border border-slate-200 relative z-10" id="adminMapContainer"></div></div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft md:col-span-2"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Tren Giat</h3><div class="relative h-64"><canvas id="chartTren"></canvas></div></div>
-<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Komposisi</h3><div class="relative h-64"><canvas id="chartKategori"></canvas></div></div>
-<div class="bg-white p-6 rounded-[28px] border border-slate-100 shadow-soft md:col-span-3"><h3 class="text-sm font-black uppercase tracking-widest mb-4">Kinerja Per Tim</h3><div class="relative h-64"><canvas id="chartTim"></canvas></div></div></div>
-</div></div>
-<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-sita">
-<header class="bg-white px-6 md:px-12 py-5 shadow-sm sticky top-0 z-50 border-b border-slate-200"><h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-boxes-stacked text-blue-500"></i> GUDANG SITA</h1></header>
-<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="container-gudang-sita"></div></div>
-<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-blacklist">
-<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
-<h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-skull-crossbones text-red-500"></i> DB BLACKLIST</h1>
-<button class="bg-jagoDark text-white px-4 py-2 rounded-xl text-sm font-bold bouncy-active" onclick="bukaFormBlacklist()"><i class="fa-solid fa-plus"></i> Tambah</button></header>
-<div class="max-w-6xl mx-auto w-full px-6 pt-6 space-y-4" id="container-blacklist"></div></div>
-<div class="hidden w-full bg-slate-50 min-h-[100dvh] flex-col pb-28" id="view-admin-aduan">
-<header class="bg-white px-6 md:px-12 py-5 shadow-sm flex justify-between items-center sticky top-0 z-50 border-b border-slate-200">
-<h1 class="text-xl md:text-2xl font-black"><i class="fa-solid fa-headset text-red-500"></i> PUSAT ADUAN</h1>
-<button class="bg-slate-50 text-slate-600 w-10 h-10 rounded-full bouncy-active border border-slate-200" onclick="sinkronDataAduan()"><i class="fa-solid fa-rotate"></i></button></header>
-<div class="max-w-6xl mx-auto w-full px-6 pt-6">
-<div class="flex bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm mb-6 max-w-md">
-<button class="flex-1 py-2 text-[12px] font-bold rounded-lg bg-jagoDark text-white" id="tab-aduan-baru" onclick="filterAduan('Antrean')">Baru Masuk</button>
-<button class="flex-1 py-2 text-[12px] font-bold rounded-lg text-slate-500" id="tab-aduan-proses" onclick="filterAduan('Diproses')">Diproses / Selesai</button></div>
-<div class="space-y-4" id="container-admin-aduan"></div></div></div>
-
-<!-- SHEET BLACKLIST -->
 <div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-blacklist">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormBlacklist()"></div>
-<div class="bottom-sheet sheet-hidden bg-[#0f172a] w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl border border-slate-800">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupBlacklist()"></div>
+<div class="sheet sh bg-slate-900 w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl border border-slate-800">
 <div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-700 rounded-full"></div></div>
 <div class="px-8 pb-4 border-b border-slate-800"><h2 class="text-[22px] font-black text-red-500"><i class="fa-solid fa-skull-crossbones mr-2"></i> Form Blacklist</h2></div>
 <div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
-<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">NIK KTP</label><input class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-nik" type="number"></div>
-<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Nama Lengkap</label><input class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-nama" type="text"></div>
-<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Kategori</label><select class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-kategori"><option>PKL Bandel</option><option>Anjal / Gepeng</option><option>Pemasang Reklame Ilegal</option><option>Lainnya</option></select></div>
-<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Catatan</label><textarea class="w-full bg-slate-900 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="input-bl-catatan" rows="2"></textarea></div>
-<button class="w-full bg-red-600 text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active" id="btnSimpanBlacklist" onclick="simpanBlacklist()"><i class="fa-solid fa-user-lock"></i> Kunci ke Database</button>
-</div></div></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">NIK KTP</label><input class="w-full bg-slate-800 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="bl-nik" type="number"></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Nama Lengkap</label><input class="w-full bg-slate-800 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="bl-nama"></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Kategori</label><select class="w-full bg-slate-800 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="bl-kat">
+<option>PKL Bandel</option><option>Anjal / Gepeng</option><option>Pemasang Reklame Ilegal</option><option>Lainnya</option></select></div>
+<div><label class="block text-[12px] font-bold text-slate-400 uppercase mb-2">Catatan</label><textarea class="w-full bg-slate-800 border border-slate-700 text-[14px] font-bold text-white rounded-xl py-3 px-4" id="bl-catatan" rows="2"></textarea></div>
+<button class="w-full bg-red-600 text-white text-[15px] font-bold rounded-2xl py-4 b" onclick="simpanBlacklist()"><i class="fa-solid fa-user-lock"></i> Kunci ke Database</button></div></div></div>
 
-<!-- MODAL PROGRESS ADMIN -->
-<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-admin-progress">
-<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-admin-content">
-<div class="bg-blue-600 p-6 flex justify-between items-start text-white">
-<div><span class="text-[10px] font-bold tracking-widest uppercase opacity-80">Update Laporan Lapangan</span><h2 class="text-[20px] font-black mt-1" id="adm-prog-id">TKT-XXXXXX</h2></div>
-<button class="w-8 h-8 bg-white/20 rounded-full bouncy-active" onclick="tutupModalAdminProgress()"><i class="fa-solid fa-xmark"></i></button></div>
-<div class="p-6 overflow-y-auto hide-scroll space-y-4">
-<div><input accept="image/*" class="hidden" id="input-prog-foto" onchange="prosesFotoProgress(event)" type="file">
-<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 bouncy-active" id="btn-prog-foto" onclick="document.getElementById('input-prog-foto').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i> Ambil Foto Lapangan</button>
-<div class="hidden relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 overflow-hidden" id="preview-prog-container"><img class="w-full h-full object-cover" id="preview-img-prog"><button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full bouncy-active" onclick="hapusFotoProgress()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Keterangan Tindak Lanjut</label><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-medium rounded-2xl py-3 px-4 resize-none" id="input-prog-teks" rows="3"></textarea></div>
-<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 bouncy-active" id="btnSimpanProgress" onclick="simpanProgressKeServer()">Kirim Progress</button>
-</div></div></div>
-
-<!-- DASHBOARD UMUM -->
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-dashboard-umum">
-<header class="bg-white px-6 py-6 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
-<div><h1 class="text-[22px] font-black leading-none">PETUGAS UMUM</h1><p class="text-[11px] font-bold text-slate-400 tracking-widest uppercase mt-1">Satpol PP Bangkalan</p></div>
-<button class="w-10 h-10 bg-red-50 text-red-500 rounded-full bouncy-active" onclick="logout()"><i class="fa-solid fa-power-off"></i></button></header>
-<div class="px-6 pt-4">
-<button class="w-full mb-6 bg-orange-50 border border-orange-200/60 rounded-[24px] p-5 flex items-center justify-between shadow-soft bouncy-active" onclick="bukaDaftarDraftUmum()">
-<div class="flex items-center gap-4"><div class="w-12 h-12 bg-white text-jagoOrange rounded-full flex items-center justify-center shadow-sm text-lg"><i class="fa-solid fa-satellite-dish"></i></div><div><p class="text-[15px] font-bold leading-tight text-left">Daftar Logbook Aktif</p><p class="text-[12px] font-medium text-slate-500 mt-0.5 text-left" id="text-draft-umum-count">Melihat giat bersama</p></div></div>
-<div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-slate-400 shadow-sm"><i class="fa-solid fa-chevron-right text-sm"></i></div></button>
-<h2 class="text-[18px] font-extrabold mb-4 px-1">Pilih Kategori Kegiatan</h2>
-<div class="grid grid-cols-2 gap-4">
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Deteksi & Cegah Dini')"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-eye"></i></div><h3 class="font-extrabold text-[14px]">Deteksi &<br>Cegah Dini</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Patroli')"><div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-shield"></i></div><h3 class="font-extrabold text-[14px]">Patroli<br>Wilayah</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Pembinaan & Penyuluhan')"><div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-users-rays"></i></div><h3 class="font-extrabold text-[14px]">Pembinaan &<br>Penyuluhan</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Penanganan Unras')"><div class="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-fire"></i></div><h3 class="font-extrabold text-[14px]">Penanganan<br>Unras</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Penertiban')"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-gavel"></i></div><h3 class="font-extrabold text-[14px]">Giat<br>Penertiban</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left" onclick="bukaPersiapanUmum('Pengamanan')"><div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-user-shield"></i></div><h3 class="font-extrabold text-[14px]">Giat<br>Pengamanan</h3></button>
-<button class="bg-white rounded-[24px] p-5 shadow-soft border border-slate-50 bouncy-active text-left col-span-2" onclick="bukaPersiapanUmum('Pengawalan')"><div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-motorcycle"></i></div><h3 class="font-extrabold text-[14px]">Pengawalan</h3></button>
-</div></div></div>
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-draft-umum">
-<header class="bg-white px-6 py-5 sticky top-0 z-40 rounded-b-[32px] shadow-sm mb-2 flex justify-between items-center">
-<div class="flex items-center gap-3"><button class="w-10 h-10 rounded-full bg-slate-50 bouncy-active border border-slate-200" onclick="switchView('view-dashboard-umum')"><i class="fa-solid fa-arrow-left"></i></button><h1 class="text-[18px] font-black">Daftar Logbook</h1></div></header>
-<div class="px-6 pt-4 space-y-4" id="container-draft-umum"></div></div>
-<div class="hidden flex-col min-h-[100dvh] bg-jagoBg relative w-full max-w-md mx-auto z-[50]" id="view-patroli-umum">
-<header class="bg-white px-5 py-4 sticky top-0 z-40 flex justify-between items-center shadow-sm">
-<div class="flex items-center"><button class="w-12 h-12 rounded-full bouncy-active bg-slate-50" onclick="switchView('view-dashboard-umum')"><i class="fa-solid fa-arrow-left text-xl"></i></button><div class="ml-3"><h1 class="text-[16px] font-black leading-tight truncate w-32" id="header-nama-giat-umum">Logbook</h1><p class="text-[11px] font-bold text-emerald-500 mt-0.5"><i class="fa-solid fa-users mr-1"></i>Akses Bersama</p></div></div>
-<div class="flex gap-2"><button class="bg-jagoDark text-white text-[13px] font-bold px-4 py-2 rounded-full bouncy-active shadow-btnDark" onclick="kirimLaporanUmum()">Kirim Laporan</button></div></header>
-<div class="flex-grow px-6 py-8 overflow-y-auto pb-36">
-<div class="flex flex-col items-center justify-center text-center mt-12 opacity-60" id="timeline-kosong-umum"><div class="w-24 h-24 bg-slate-200 rounded-full flex items-center justify-center mb-5"><i class="fa-solid fa-clipboard-list text-5xl text-slate-400"></i></div><p class="text-[16px] font-black">Belum Ada Rangkaian</p></div>
-<div class="space-y-5 relative" id="timeline-list-umum"></div></div>
-<div class="fixed bottom-8 w-full max-w-md flex justify-center z-40 pointer-events-none px-6"><button class="pointer-events-auto w-full bg-blue-600 text-white font-bold py-4 rounded-full shadow-btnDark bouncy-active flex justify-center items-center gap-2 text-[16px]" onclick="bukaFormTemuanUmum()"><i class="fa-solid fa-plus"></i> Rangkaian Kegiatan</button></div></div>
 <div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-persiapan-umum">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupPersiapanUmum()"></div>
-<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[95dvh] shadow-2xl">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupPersiapanUmum()"></div>
+<div class="sheet sh bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[95dvh] shadow-2xl">
 <div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
-<div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black" id="title-persiapan-umum">Persiapan</h2><p class="text-[13px] text-slate-500 mt-1">Sesuai Surat Perintah Tugas (SPT)</p></div>
+<div class="px-8 pb-4 border-b border-slate-100"><h2 class="text-[22px] font-black" id="um-title">Persiapan</h2><p class="text-[13px] text-slate-500 mt-1">Sesuai Surat Perintah Tugas (SPT)</p></div>
 <div class="overflow-y-auto px-8 py-6 space-y-5 hide-scroll">
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Kegiatan</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-umum-nama-giat" type="text"></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pelapor</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="input-umum-pelapor" type="text"></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Instansi Gabungan / BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="input-umum-anggota-bko" type="text"><button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold bouncy-active" onclick="tambahAnggotaBKOUmum()"><i class="fa-solid fa-plus"></i></button></div></div>
-<div><div class="flex justify-between items-end mb-2"><label class="text-[12px] font-bold text-slate-500 uppercase">Daftar Anggota Hadir</label><button class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded-md bouncy-active" onclick="centangSemuaUmum()">Pilih Semua</button></div>
-<div class="bg-slate-50 border border-slate-200 rounded-xl p-2 h-40 overflow-y-auto hide-scroll space-y-2" id="container-anggota-umum"></div></div>
-<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" onclick="mulaiLogbookUmum()">Buat Logbook Baru</button>
-</div></div></div>
-<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-temuan-umum">
-<div class="absolute inset-0 bg-jagoDark/50 backdrop-blur-sm" onclick="tutupFormTemuanUmum()"></div>
-<div class="bottom-sheet sheet-hidden bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
-<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
-<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black">Rangkaian Kegiatan</h2><button class="w-10 h-10 text-slate-400 bg-slate-50 rounded-full bouncy-active" onclick="tutupFormTemuanUmum()"><i class="fa-solid fa-xmark"></i></button></div>
-<div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
-<div class="space-y-6" id="group-input-fields-umum">
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Sub Kegiatan</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-4 px-4" id="input-umum-subkategori"></select></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Lokasi</label><input id="input-umum-koordinat" type="hidden"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-3 px-4 resize-none" id="input-umum-lokasi" rows="2"></textarea></div>
-<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Tindakan</label><textarea class="w-full bg-white border border-slate-200 text-[14px] font-medium rounded-2xl py-3 px-4" id="input-umum-keterangan" rows="3"></textarea></div></div>
-<div><input accept="image/*" capture="environment" class="hidden" id="input-umum-kamera" onchange="prosesFotoKompresiUmum(event)" type="file">
-<input accept="image/*" class="hidden" id="input-umum-galeri" multiple onchange="prosesFotoKompresiUmum(event)" type="file">
-<div class="grid grid-cols-2 gap-3 mb-2">
-<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-umum-kamera').click()"><i class="fa-solid fa-camera text-xl"></i><span class="text-[11px]">Kamera GPS</span></button>
-<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 bouncy-active" onclick="document.getElementById('input-umum-galeri').click()"><i class="fa-regular fa-images text-xl text-blue-500"></i><span class="text-[11px]">Pilih Galeri</span></button></div>
-<div class="hidden mt-3 bg-[#0f172a] rounded-2xl p-3 flex justify-between items-center" id="thumbnail-bar-umum"><span class="text-[10px] font-black text-white tracking-widest uppercase ml-1" id="thumb-count-text-umum">0 BERKAS</span><div class="flex gap-1 items-center" id="thumb-images-container-umum"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusPreviewUmum()"><i class="fa-solid fa-trash"></i></button></div></div>
-<button class="w-full bg-jagoDark text-white text-[16px] font-bold rounded-2xl py-4 shadow-btnDark bouncy-active" id="btnSaveGiatUmum" onclick="simpanKeTimelineUmum()">Simpan Kegiatan</button>
-</div></div></div>
-<div class="hidden w-full max-w-md bg-jagoBg min-h-[100dvh] relative flex-col mx-auto pb-28" id="view-anggota-umum">
-<header class="bg-white px-6 py-6 shadow-sm rounded-b-[32px] mb-2"><h1 class="text-[22px] font-black">Daftar Petugas</h1></header>
-<div class="px-6 pt-4"><div class="bg-white rounded-[28px] p-5 shadow-soft border border-slate-50 mb-8">
-<div class="flex gap-3"><input class="w-full bg-slate-50 border border-slate-200 text-[15px] font-bold rounded-2xl px-4" id="input-nama-petugas-umum" type="text"><button class="bg-jagoDark text-white w-14 h-14 rounded-2xl font-bold bouncy-active flex-shrink-0" onclick="tambahPetugasUmum()"><i class="fa-solid fa-plus text-xl"></i></button></div></div>
-<div class="space-y-3" id="list-petugas-umum"></div></div></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Nama Kegiatan</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="um-nama-giat"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Pelapor</label><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl py-3 px-4" id="um-pelapor"></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Instansi Gabungan / BKO</label><div class="flex gap-2"><input class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-xl px-4" id="um-bko">
+<button class="bg-slate-200 text-slate-600 px-4 rounded-xl font-bold b" onclick="tambahBKOUmum()"><i class="fa-solid fa-plus"></i></button></div></div>
+<div><div class="flex justify-between items-end mb-2"><label class="block text-[12px] font-bold text-slate-500 uppercase">Daftar Anggota Hadir</label><button class="text-[10px] font-bold bg-slate-100 px-2 py-1 rounded-md" onclick="centangSemuaUmum()">Pilih Semua</button></div>
+<input class="w-full bg-white border border-slate-200 text-[13px] font-bold rounded-xl py-3 pl-4 pr-4 mb-2" id="um-search" onkeyup="cariAnggotaUmum()" placeholder="Cari nama petugas...">
+<div class="bg-slate-50 border border-slate-200 rounded-xl p-2 h-40 overflow-y-auto hide-scroll space-y-2" id="um-wrap-check"></div></div>
+<button class="w-full bg-slate-900 text-white text-[16px] font-bold rounded-2xl py-4 b" onclick="mulaiLogbookUmum()">Buat Logbook Baru</button></div></div></div>
 
-<!-- MODAL SUKSES -->
-<div class="fixed inset-0 z-[130] hidden items-center justify-center bg-jagoDark/80 backdrop-blur-sm p-4" id="modal-sukses">
-<div class="bg-white w-full max-w-sm rounded-[32px] p-8 text-center transform scale-95 transition-transform" id="modal-sukses-content">
+<div class="fixed inset-0 z-[70] hidden flex-col justify-end" id="sheet-temuan-umum">
+<div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="tutupTemuanUmum()"></div>
+<div class="sheet sh bg-white w-full max-w-md mx-auto rounded-t-[32px] relative z-10 flex flex-col max-h-[92dvh] shadow-2xl">
+<div class="flex justify-center pt-4 pb-3"><div class="w-14 h-1.5 bg-slate-200 rounded-full"></div></div>
+<div class="px-8 pb-4 flex justify-between items-center border-b border-slate-100"><h2 class="text-[20px] font-black">Rangkaian Kegiatan</h2>
+<button class="w-10 h-10 rounded-full bg-slate-50 b" onclick="tutupTemuanUmum()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="overflow-y-auto px-8 py-6 space-y-6 hide-scroll">
+<div class="space-y-6" id="umu-fields">
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Sub Kegiatan</label><select class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-4 px-4" id="umu-sub"></select></div>
+<div><div class="flex justify-between items-center mb-2"><label class="block text-[12px] font-bold text-slate-500 uppercase">Lokasi</label><span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md b" onclick="gps('umu-lok','umu-koord')"><i class="fa-solid fa-location-crosshairs mr-1"></i> GPS</span></div>
+<input type="hidden" id="umu-koord"><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] font-bold rounded-2xl py-3 px-4 resize-none" id="umu-lok" rows="2"></textarea></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Tindakan</label><textarea class="w-full bg-white border border-slate-200 text-[14px] rounded-2xl py-3 px-4" id="umu-ket" rows="3"></textarea></div></div>
+<div><input type="file" accept="image/*" capture="environment" class="hidden" id="umu-kamera" onchange="fotoKompresi(event,'umum')">
+<input type="file" accept="image/*" multiple class="hidden" id="umu-galeri" onchange="fotoKompresi(event,'umum')">
+<div class="grid grid-cols-2 gap-3 mb-2">
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 b" onclick="document.getElementById('umu-kamera').click()"><i class="fa-solid fa-camera text-xl"></i><span class="text-[11px]">Kamera GPS</span></button>
+<button class="bg-white border border-slate-200 text-slate-600 font-bold py-4 rounded-2xl flex flex-col items-center gap-2 b" onclick="document.getElementById('umu-galeri').click()"><i class="fa-regular fa-images text-xl text-blue-500"></i><span class="text-[11px]">Pilih Galeri</span></button></div>
+<div class="hidden mt-3 bg-slate-900 rounded-2xl p-3 flex justify-between items-center" id="umu-bar"><span class="text-[10px] font-black text-white tracking-widest uppercase ml-1" id="umu-count">0 BERKAS</span>
+<div class="flex gap-1 items-center" id="umu-thumbs"></div><button class="ml-2 w-8 h-8 text-slate-400" onclick="hapusFoto('umum')"><i class="fa-solid fa-trash"></i></button></div></div>
+<button class="w-full bg-slate-900 text-white text-[16px] font-bold rounded-2xl py-4 b" id="umu-save" onclick="simpanTemuanUmum()">Simpan Kegiatan</button></div></div></div>
+
+<div class="fixed inset-0 z-[120] hidden items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300" id="modal-admin-progress">
+<div class="bg-white w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col max-h-[90vh]" id="modal-admin-progress-c">
+<div class="bg-blue-600 p-6 flex justify-between items-start text-white">
+<div><span class="text-[10px] font-bold tracking-widest uppercase opacity-80">Update Laporan Lapangan</span><h2 class="text-[20px] font-black mt-1" id="prog-id">TKT-</h2></div>
+<button class="w-8 h-8 bg-white/20 rounded-full b" onclick="tutupProgress()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="p-6 overflow-y-auto hide-scroll space-y-4">
+<div><input type="file" accept="image/*" class="hidden" id="prog-foto" onchange="fotoProgress(event)">
+<button class="w-full bg-slate-50 border-2 border-dashed border-slate-300 text-slate-500 font-bold py-6 rounded-2xl flex flex-col items-center gap-2 b" id="btn-prog-foto" onclick="document.getElementById('prog-foto').click()"><i class="fa-solid fa-camera text-2xl text-blue-500"></i> Ambil Foto Lapangan</button>
+<div class="hidden relative w-full h-32 bg-slate-100 rounded-2xl border-2 border-slate-200 overflow-hidden" id="prog-prev-wrap"><img class="w-full h-full object-cover" id="prog-prev">
+<button class="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full b" onclick="hapusFotoProgress()"><i class="fa-solid fa-trash text-xs"></i></button></div></div>
+<div><label class="block text-[12px] font-bold text-slate-500 uppercase mb-2">Keterangan Tindak Lanjut</label><textarea class="w-full bg-slate-50 border border-slate-200 text-[14px] rounded-2xl py-3 px-4 resize-none" id="prog-teks" rows="3"></textarea></div>
+<button class="w-full bg-blue-600 text-white text-[15px] font-bold rounded-2xl py-4 b" onclick="simpanProgress()">Kirim Progress</button></div></div></div>
+
+<div class="fixed inset-0 z-[140] hidden items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4" id="modal-sukses">
+<div class="bg-white w-full max-w-sm rounded-[32px] p-8 text-center shadow-2xl transform scale-95 transition-transform duration-300" id="modal-sukses-c">
 <div class="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-6"><i class="fa-solid fa-check"></i></div>
 <h2 class="text-xl font-black mb-2">Berhasil!</h2><p class="text-[13px] text-slate-500 font-medium mb-6" id="modal-sukses-desc"></p>
-<button class="w-full bg-emerald-500 text-white font-bold py-4 rounded-2xl mb-2 bouncy-active hidden" id="btnShareWA"><i class="fa-brands fa-whatsapp mr-2"></i> Bag
+<button class="w-full bg-emerald-500 text-white font-bold py-4 rounded-2xl mb-2 b hidden" id="btnShareWA"><i class="fa-brands fa-whatsapp mr-2"></i> Bagikan Laporan WA</button>
+<button class="w-full bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl b" onclick="tutupModalSukses()">Tutup</button></div></div>
+
+<script>
+// ================= KONFIG =================
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwI4Nw2i0A3a-QplA3gI-9cqYoV8QlXrIDyHEkOt6JknZzUJ1uPX0Ja41okiGueriGA/exec';
+const sb=supabase.createClient('https://mnjcughtunlsuayxteud.supabase.co','sb_publishable_zA6aztT6liHenHZfR5ohyA_TduVH8I6');
+let currentUser=null,historyDb=[],sitaDb=[],blackDb=[],aduanDb=[],draftsPatroli=[],draftsUmum=[],anggotaMap={};
+let metaPatroli={pimpinan_apel:'',anggota_hadir:[]},listTemuan=[],fotoPatroli=[],editIdx=-1;
+let activeUmum=null,fotoUmum=[],editIdxUmum=-1,fotoSitaB64=null,fotoAduanB64='',fotoProgB64='',progId='';
+let adminMap=null,mapMk=[],chT=null,chK=null,chTm=null,pTren=null,pKat=null;
+const subMap={"Deteksi & Cegah Dini":["SIROLEG","Informasi Unjuk Rasa"],"Patroli":["Patroli Ketertiban Umum","Penyisiran Wilayah"],"Pembinaan & Penyuluhan":["Penyuluhan Masyarakat","Pembinaan Aparat"],"Penanganan Unras":["Pengamanan Unjuk Rasa","Kerusuhan Massa"],"Penertiban":["Banner Ilegal / Expired","Anak Jalanan","ODGJ","Pengemis","Pengamen","Rokok Ilegal","PKL"],"Pengamanan":["Event / Acara","Religi","VIP / Pejabat Daerah"],"Pengawalan":["Pengawalan Pejabat","Pengawalan Logistik"]};
+const katOpts=["APP (Acara Perintah Pimpinan)|-","Deteksi & Cegah Dini|SIROLEG","Deteksi & Cegah Dini|Informasi Unjuk Rasa","Patroli|-","Pembinaan & Penyuluhan|-","Penanganan Unras & Kerusuhan Massa|-","Pengawalan|-","Penertiban|Banner Ilegal / Expired","Penertiban|Anak Jalanan","Penertiban|ODGJ","Penertiban|Pengemis","Penertiban|Pengamen","Penertiban|Rokok Ilegal","Penertiban|PKL","Pengamanan|Event / Acara","Pengamanan|Religi"];
+const $=id=>document.getElementById(id);
+const tglStr=()=>new Date().toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'});
+const jamStr=()=>new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.',':');
+function load(x){Swal.fire({title:'<div class="text-xl font-black mt-2">'+x+'</div>',allowOutsideClick:false,showConfirmButton:false,customClass:{popup:'rounded-[32px]'},didOpen:()=>Swal.showLoading()});}
+function groupHist(d){const g={};d.forEach(i=>{if(!g[i.id_laporan])g[i.id_laporan]={id_laporan:i.id_laporan,nama_tim:i.nama_tim,tanggal:i.tanggal,link_drive:i.link_drive,link_doc:i.link_doc,waktu_mulai:i.waktu,waktu_selesai:i.waktu,temuan:[]};g[i.id_laporan].temuan.push(i);g[i.id_laporan].waktu_selesai=i.waktu;});return Object.values(g).reverse();}
+// ================= DATA LAYER =================
+async function loadAll(show){if(show)load('Menyinkronkan Server');
+const [ang,dp,du,lp,lu,si,bl,ad]=await Promise.all([sb.from('daftar_anggota').select('*'),sb.from('draf_patroli').select('*'),sb.from('draf_petugas_umum').select('*'),sb.from('log_patroli').select('*'),sb.from('log_petugas_umum').select('*'),sb.from('barang_bukti').select('*'),sb.from('blacklist').select('*'),sb.from('aduan_masyarakat').select('*')]);
+anggotaMap={};(ang.data||[]).forEach(a=>{const k=a.id_tim.toLowerCase();(anggotaMap[k]=anggotaMap[k]||[]).push(a.nama_anggota);});
+draftsPatroli=dp.data||[];draftsUmum=du.data||[];
+historyDb=[...(lp.data||[]).map(x=>({id_laporan:x.id_laporan,tanggal:x.tanggal,waktu:x.waktu,nama_tim:x.nama_tim,kategori:x.kategori_giat,sub_kategori:x.sub_kategori,koordinat:x.lokasi_koordinat,lokasi:x.lokasi_teks,keterangan:x.keterangan_detail,link_drive:x.link_foto,link_doc:x.link_laporan_doc,anggota:(x.daftar_anggota||'').toLowerCase(),thumbnail:x.thumbnail||''})),
+...(lu.data||[]).map(x=>({id_laporan:x.id_laporan,tanggal:x.tanggal,waktu:x.waktu,nama_tim:x.nama_kegiatan,kategori:x.kategori,sub_kategori:x.sub_kategori,koordinat:x.koordinat,lokasi:x.lokasi,keterangan:x.keterangan,link_drive:x.link_folder,link_doc:x.link_laporan_doc,anggota:(x.daftar_anggota||'').toLowerCase(),thumbnail:x.thumbnail||''}))];
+sitaDb=(si.data||[]).map(x=>({id_sita:x.id_sita,tanggal:x.tanggal,waktu:x.waktu,tim:x.tim,jenis:x.jenis_barang,jumlah:x.jumlah,lokasi:x.lokasi,foto:x.foto_base64||''}));
+blackDb=(bl.data||[]).map(x=>({nik:x.nik,nama:x.nama_pelanggar,kategori:x.kategori_pelanggaran,catatan:x.catatan,tanggal:x.tanggal_ditindak}));
+aduanDb=(ad.data||[]).map(x=>({id_tiket:x.id_tiket,tanggal:x.tanggal,waktu:x.waktu,nama:x.nama,hp:x.no_hp||'-',kategori:x.kategori,lokasi:x.lokasi,koordinat:x.koordinat||'',deskripsi:x.deskripsi,status:x.status||'Antrean',foto:x.foto_base64||'',progress_text:x.progress_text||'',progress_foto:x.progress_foto||''}));
+if(show)Swal.close();}
+// ================= ROUTER & AUTH =================
+function showPage(n){['page-public','page-login','page-patroli','page-admin','page-umum'].forEach(p=>{const e=$(p);if(e){e.classList.add('hidden');e.classList.remove('flex');}});const el=$('page-'+n);el.classList.remove('hidden');el.classList.add('flex');}
+function switchView(t){const views=['view-loading','view-login','pv-dashboard','pv-aktif','pv-riwayat','pv-anggota','pv-skp','av-dashboard','av-sita','av-black','av-aduan','av-skp','uv-dashboard','uv-draft','uv-aktif','uv-petugas','uv-skp'];views.forEach(id=>{const e=$(id);if(e){if(id===t){e.classList.remove('hidden');e.classList.add('flex');}else{e.classList.add('hidden');e.classList.remove('flex');}}});}
+async function initApp(){const path=location.pathname;const sess=localStorage.getItem('sigap_session');
+if(path==='/'||!path.includes('/p/')){showPage('public');await loadAll(false);renderPublic();return;}
+if(sess){currentUser=JSON.parse(sess);await loadAll(false);routingRole();}else{showPage('login');$('view-loading').classList.add('hidden');$('view-login').classList.remove('hidden');$('view-login').classList.add('flex');await loadAll(false);}}
+function routingRole(){const path=location.pathname;$('view-loading').classList.add('hidden');
+if(currentUser.role==='admin'||currentUser.role==='komandan'){if(!path.includes('/p/admin.html')){history.replaceState(null,'','/p/admin.html');}showPage('admin');adminNav('av-dashboard');}
+else if(currentUser.role==='umum'){if(!path.includes('/p/umum.html')){history.replaceState(null,'','/p/umum.html');}showPage('umum');umumNav('uv-dashboard');}
+else{if(!path.includes('/p/patroli.html')){history.replaceState(null,'','/p/patroli.html');}showPage('patroli');patroliNav('pv-dashboard');$('dash-avatar').innerText=currentUser.nama.substring(0,2).toUpperCase();cekDraft();}}
+async function prosesLogin(e){const btn=$('btnLogin');btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i> Memproses...';
+const nama=$('login-nama').value.trim().toLowerCase(),pin=$('login-pin').value.trim();
+const {data,error}=await sb.auth.signInWithPassword({email:nama+'@satpolpp.go.id',password:pin});
+if(error){Swal.fire({icon:'error',title:'Akses Ditolak',text:'ID atau password salah!',customClass:{popup:'rounded-[32px]'}});btn.innerHTML='Masuk Sistem';return;}
+const prof=await sb.from('profiles').select('*').eq('id',data.user.id).single();
+await loadAll(false);
+currentUser={nama:prof.data.nama,role:prof.data.role,anggota_tim:anggotaMap[nama]||[],draf_aktif:null};
+const dr=draftsPatroli.find(d=>d.id_tim.toLowerCase()===nama);if(dr&&currentUser.role==='patroli'){currentUser.draf_aktif={meta:JSON.stringify(dr.meta_patroli),temuan:JSON.stringify(dr.list_temuan_json)};metaPatroli=dr.meta_patroli;listTemuan=mergeDraft(dr.list_temuan_json);}
+localStorage.setItem('sigap_session',JSON.stringify(currentUser));$('loginForm').reset();routingRole();btn.innerHTML='Masuk Sistem';}
+function masukUmum(){Swal.fire({title:'Masukkan PIN',input:'password',inputPlaceholder:'4 digit angka',showCancelButton:true,confirmButtonText:'Masuk',cancelButtonText:'Batal',confirmButtonColor:'#0f172a'}).then(async r=>{if(r.isConfirmed){if(r.value==='1950'){await loadAll(false);currentUser={nama:'Petugas Umum',role:'umum',anggota_tim:anggotaMap['petugas umum']||[]};localStorage.setItem('sigap_session',JSON.stringify(currentUser));routingRole();}else Swal.fire({icon:'error',title:'PIN salah!',customClass:{popup:'rounded-[32px]'}});}});}
+function logout(){Swal.fire({title:'Keluar Aplikasi?',icon:'warning',showCancelButton:true,confirmButtonColor:'#ea580c',confirmButtonText:'Ya, Keluar'}).then(r=>{if(r.isConfirmed){localStorage.removeItem('sigap_session');sb.auth.signOut();location.href='/p/login.html';}});}
+function mergeDraft(cloud){const local=JSON.parse(localStorage.getItem('sigap_draft_patroli')||'[]');return (cloud||[]).map(c=>{const l=local.find(x=>x.id_laporan===c.id_laporan);if(l&&l.foto&&l.foto.length)c.foto=l.foto;return c;});}
+// ================= PUBLIK =================
+function renderPublic(){const g=groupHist(historyDb);$('pub-giat').innerText=g.length;$('pub-temuan').innerText=historyDb.length;$('pub-sita').innerText=sitaDb.length;
+const l7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l7.push(d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'}));}
+const tren={};l7.forEach(x=>tren[x]=0);const kat={};historyDb.forEach(i=>{const mk=i.kategori||'Lainnya';const sk=(i.sub_kategori&&i.sub_kategori!=='-')?i.sub_kategori:mk;if(!mk.includes('APP')){kat[sk]=(kat[sk]||0)+1;const m=l7.find(d=>i.tanggal&&i.tanggal.includes(d.split(' ')[0]));if(m&&tren[m]!==undefined)tren[m]++;}});
+Chart.defaults.font.family='"Plus Jakarta Sans",sans-serif';
+if(pTren)pTren.destroy();const c1=$('pubTren').getContext('2d');const gr=c1.createLinearGradient(0,0,0,300);gr.addColorStop(0,'rgba(234,88,12,.3)');gr.addColorStop(1,'rgba(234,88,12,0)');
+pTren=new Chart(c1,{type:'line',data:{labels:Object.keys(tren),datasets:[{data:Object.values(tren),borderColor:'#ea580c',backgroundColor:gr,fill:true,tension:.4,borderWidth:3,pointRadius:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{display:false},x:{grid:{display:false}}}}});
+if(pKat)pKat.destroy();const mk2=Object.keys(kat).map(l=>({l,v:kat[l]})).sort((a,b)=>b.v-a.v);const lb=[],vl=[];let ov=0;mk2.forEach((m,i)=>{if(i<4){lb.push(m.l);vl.push(m.v);}else ov+=m.v;});if(ov>0){lb.push('Lainnya');vl.push(ov);}
+pKat=new Chart($('pubKat').getContext('2d'),{type:'doughnut',data:{labels:lb,datasets:[{data:vl,backgroundColor:['#ea580c','#3b82f6','#10b981','#f43f5e','#64748b'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'75%',plugins:{legend:{position:'bottom',labels:{font:{size:10}}}}}});
+window.fotoPublik=historyDb.filter(x=>x.kategori&&!x.kategori.includes('APP')).reverse().slice(0,8);
+const grid=$('pub-galeri');if(!window.fotoPublik.length){grid.innerHTML='<div class="col-span-full py-12 text-center text-slate-500">Belum ada kegiatan terarsip.</div>';return;}
+grid.innerHTML=window.fotoPublik.map((g2,i)=>{const lab=(g2.sub_kategori&&g2.sub_kategori!=='-')?g2.sub_kategori:g2.kategori;const img=(g2.thumbnail&&g2.thumbnail!=='-')?`<img src="data:image/jpeg;base64,${g2.thumbnail}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>`:`<div class="w-full h-full bg-slate-800 flex items-center justify-center"><i class="fa-solid fa-camera-retro text-4xl text-slate-600"></i></div>`;
+return `<div onclick="bukaPopUpFoto(${i})" class="relative rounded-3xl overflow-hidden aspect-square group cursor-pointer shadow-sm border border-slate-700/50 bg-slate-800 b">${img}<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80"></div><div class="absolute bottom-0 left-0 w-full p-5"><span class="bg-red-500/90 text-white text-[9px] font-black px-2 py-1 rounded mb-2 inline-block uppercase tracking-wider">${lab}</span><p class="text-white text-[13px] font-bold leading-tight mb-1">${g2.lokasi}</p><p class="text-slate-400 text-[10px]">${g2.tanggal} • ${g2.waktu} WIB</p></div></div>`;}).join('');}
+function bukaPopUpFoto(i){const g2=window.fotoPublik[i];if(!g2)return;Swal.fire({imageUrl:g2.thumbnail?('data:image/jpeg;base64,'+g2.thumbnail):undefined,imageAlt:g2.lokasi,showConfirmButton:false,showCloseButton:true,background:'transparent',backdrop:'rgba(0,0,0,.9)',customClass:{popup:'p-0 bg-transparent',image:'rounded-[32px] max-w-full max-h-[85vh] object-contain m-0'},width:'auto'});}
+function bukaLapor(){$('view-lapor').classList.remove('hidden');$('view-lapor').classList.add('flex');tabPublik('buat');}
+function tutupLapor(){$('view-lapor').classList.add('hidden');$('view-lapor').classList.remove('flex');}
+function tabPublik(t){if(t==='buat'){$('tab-buat').className='flex-1 py-3 text-[13px] font-bold rounded-xl bg-white shadow-sm';$('tab-cek').className='flex-1 py-3 text-[13px] font-bold rounded-xl text-slate-500';$('konten-buat').classList.remove('hidden');$('konten-cek').classList.add('hidden');$('konten-cek').classList.remove('flex');}else{$('tab-cek').className='flex-1 py-3 text-[13px] font-bold rounded-xl bg-white shadow-sm';$('tab-buat').className='flex-1 py-3 text-[13px] font-bold rounded-xl text-slate-500';$('konten-cek').classList.remove('hidden');$('konten-cek').classList.add('flex');$('konten-buat').classList.add('hidden');renderTiketWarga();}}
+function ubahStep(n){if(n===2){if(!$('ad-lok').value.trim()){Swal.fire({icon:'warning',title:'Lokasi wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}$('step-1').classList.add('hidden');$('step-2').classList.remove('hidden');}else{$('step-2').classList.add('hidden');$('step-1').classList.remove('hidden');}}
+function gps(l,k){const L=$(l),K=$(k);L.value='Mengunci satelit...';if(navigator.geolocation)navigator.geolocation.getCurrentPosition(async p=>{const la=p.coords.latitude,lo=p.coords.longitude;K.value=la+','+lo;try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${la}&lon=${lo}`);const d=await r.json();L.value=d.display_name||`${la},${lo}`;}catch(e){L.value=`${la},${lo}`;}},()=>{L.value='GPS tidak merespon.';},{enableHighAccuracy:true});}
+function kompres(file,maxW,cb){const r=new FileReader();r.readAsDataURL(file);r.onload=e=>{const img=new Image();img.src=e.target.result;img.onload=()=>{const c=document.createElement('canvas');const s=maxW/img.width;c.width=maxW;c.height=img.height*s;c.getContext('2d').drawImage(img,0,0,c.width,c.height);cb(c,c.toDataURL('image/jpeg',.8));};};}
+function fotoAduan(ev){const f=ev.target.files[0];if(!f)return;kompres(f,400,(c,url)=>{$('ad-prev').src=url;$('ad-prev-wrap').classList.remove('hidden');$('btn-ad-foto').classList.add('hidden');fotoAduanB64=url.split(',')[1];});}
+function hapusFotoAduan(){fotoAduanB64='';$('ad-foto').value='';$('ad-prev').src='';$('ad-prev-wrap').classList.add('hidden');$('btn-ad-foto').classList.remove('hidden');}
+async function kirimAduan(){const nama=$('ad-nama').value.trim()||'Warga Bangkalan',hp=$('ad-hp').value.trim()||'-',kategori=$('ad-kat').value,lokasi=$('ad-lok').value.trim(),desk=$('ad-desk').value.trim(),koord=$('ad-koord').value;
+if(!lokasi||!desk){Swal.fire({icon:'warning',title:'Lokasi & Deskripsi wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}
+const btn=$('btnKirimAduan');btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirim...';
+const idT='TKT-'+Math.floor(100000+Math.random()*900000);
+const {error}=await sb.from('aduan_masyarakat').insert([{id_tiket:idT,tanggal:tglStr(),waktu:jamStr(),nama,hp:noHp(hp),kategori,lokasi,koordinat:koord,deskripsi:desk,status:'Antrean',foto_base64:fotoAduanB64}]);
+btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Kirim Laporan Sekarang';
+if(error){Swal.fire({icon:'error',title:'Gagal Terkirim',text:error.message,customClass:{popup:'rounded-[32px]'}});return;}
+$('ad-nama').value='';$('ad-hp').value='';$('ad-lok').value='';$('ad-desk').value='';hapusFotoAduan();
+Swal.fire({icon:'success',title:'Aduan Terkirim!',html:`Nomor Tiket:<br><b class='text-2xl tracking-widest text-red-600 bg-red-50 px-4 py-2 rounded-xl inline-block mt-2'>${idT}</b>`,confirmButtonColor:'#0f172a',customClass:{popup:'rounded-[32px]'}});
+tabPublik('cek');$('cek-tiket').value=idT.replace('TKT-','');}
+function noHp(h){let s=String(h).replace(/[^0-9]/g,'');if(s.startsWith('0'))s='62'+s.slice(1);else if(s.startsWith('8'))s='628'+s;return s;}
+async function cekTiket(){const no='TKT-'+$('cek-tiket').value.trim();if(!no)return;load('Mencari Tiket...');await loadAll(false);Swal.close();bukaTracker(no);}
+function renderTiketWarga(){const c=$('list-tiket');if(!aduanDb.length){c.innerHTML='<div class="text-center py-6 text-[12px] font-bold text-slate-400">Belum ada antrean laporan.</div>';return;}
+c.innerHTML=[...aduanDb].reverse().slice(0,15).map(a=>{const col=(a.status==='Antrean'||a.status==='Menunggu Triage')?'amber':a.status.includes('Selesai')?'emerald':'blue';
+return `<div onclick="bukaTracker('${a.id_tiket}')" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 p-4 rounded-2xl cursor-pointer b flex justify-between items-center"><div><span class="text-[10px] font-black tracking-widest text-slate-400">${a.id_tiket}</span><h4 class="text-[13px] font-bold mt-1">${a.kategori}</h4></div><span class="bg-${col}-100 text-${col}-600 text-[9px] font-black uppercase px-2 py-1 rounded border border-${col}-200">${a.status}</span></div>`;}).join('');}
+function bukaTracker(id){const a=aduanDb.find(x=>x.id_tiket===id);if(!a){Swal.fire({icon:'error',title:'Tidak Ditemukan',customClass:{popup:'rounded-[32px]'}});return;}
+$('trk-id').innerText=a.id_tiket;$('trk-kat').innerText=a.kategori;$('trk-lok').innerHTML=`<i class="fa-solid fa-location-dot text-red-500 mr-1"></i> ${a.lokasi}`;
+let h='';if(a.status==='Antrean'||a.status==='Menunggu Triage'||a.status==='Ditunda')h=`<div class='relative'><div class='absolute -left-[21px] w-3 h-3 bg-amber-400 rounded-full ring-4 ring-slate-50'></div><p class='text-[12px] font-bold'>Menunggu Triage Admin</p></div><div class='relative opacity-40'><div class='absolute -left-[21px] w-3 h-3 bg-slate-300 rounded-full ring-4 ring-slate-50'></div><p class='text-[12px] font-bold text-slate-600'>Diproses Regu Lapangan</p></div>`;
+else if(a.status.includes('Selesai'))h=`<div class='relative opacity-40'><div class='absolute -left-[21px] w-3 h-3 bg-slate-300 rounded-full ring-4 ring-slate-50'></div><p class='text-[12px] font-bold text-slate-600'>Laporan Diterima</p></div><div class='relative'><div class='absolute -left-[21px] w-3 h-3 bg-emerald-500 rounded-full ring-4 ring-emerald-50'></div><p class='text-[12px] font-black text-emerald-600'>Selesai Ditindaklanjuti</p></div>`;
+else h=`<div class='relative opacity-40'><div class='absolute -left-[21px] w-3 h-3 bg-slate-300 rounded-full ring-4 ring-slate-50'></div><p class='text-[12px] font-bold text-slate-600'>Laporan Diterima</p></div><div class='relative'><div class='absolute -left-[21px] w-3 h-3 bg-blue-500 rounded-full ring-4 ring-blue-50 animate-pulse'></div><p class='text-[12px] font-black text-blue-600'>Tim Sedang di Lokasi</p></div>`;
+$('trk-timeline').innerHTML=h;const pa=$('trk-prog-area');if(a.progress_text||a.progress_foto){pa.classList.remove('hidden');$('trk-prog-teks').innerText=`"${a.progress_text||'Telah ditindaklanjuti.'}"`;if(a.progress_foto){$('trk-prog-foto').src='data:image/jpeg;base64,'+a.progress_foto;$('trk-prog-foto').classList.remove('hidden');}else $('trk-prog-foto').classList.add('hidden');}else pa.classList.add('hidden');
+const m=$('modal-tracker');m.classList.remove('hidden');m.classList.add('flex');setTimeout(()=>{m.classList.remove('opacity-0');$('modal-tracker-c').classList.remove('scale-95');},10);}
+function tutupTracker(){const m=$('modal-tracker');m.classList.add('opacity-0');$('modal-tracker-c').classList.add('scale-95');setTimeout(()=>{m.classList.add('hidden');m.classList.remove('flex');},300);}
+// ================= NAV HELPERS =================
+function setNav(pref,keys,active){keys.forEach(k=>{const i=$(pref+'n-'+k)||$(pref+k);const t=$(pref+'t-'+k);if(i){i.classList.remove('text-slate-900');i.classList.add('text-slate-400');}if(t){t.classList.remove('text-slate-900');t.classList.add('text-slate-400');}});
+const ia=$(pref+'n-'+active)||$(pref+active);const ta=$(pref+'t-'+active);if(ia){ia.classList.remove('text-slate-400');ia.classList.add('text-slate-900');}if(ta){ta.classList.remove('text-slate-400');ta.classList.add('text-slate-900');}}
+function patroliNav(t){switchView(t);setNav('p',['beranda','riwayat','anggota','skp'],t==='pv-dashboard'?'beranda':t==='pv-riwayat'?'riwayat':t==='pv-anggota'?'anggota':'skp');
+if(t==='pv-riwayat')renderRiwayat();if(t==='pv-anggota')renderAnggota();if(t==='pv-skp')renderSKP(true);}
+function adminNav(t){switchView(t);setNav('a',['dash','sita','black','skp','aduan'],t==='av-dashboard'?'dash':t==='av-sita'?'sita':t==='av-black'?'black':t==='av-skp'?'skp':'aduan');
+if(t==='av-dashboard')renderAdmin();if(t==='av-sita')renderSita();if(t==='av-black')renderBlacklist();if(t==='av-skp')renderSKP(true);if(t==='av-aduan')filterAduan('Antrean');}
+function umumNav(t){switchView(t);setNav('u',['beranda','logbook','petugas','skp'],t==='uv-dashboard'?'beranda':t==='uv-draft'?'logbook':t==='uv-petugas'?'petugas':'skp');
+if(t==='uv-draft')renderDraftUmum();if(t==='uv-petugas')renderPetugas();if(t==='uv-skp')renderSKP(true);if(t==='uv-dashboard')$('umum-count').innerText=draftsUmum.length+' Giat di Server';}
+// ================= ADMIN =================
+function renderAdmin(){const g=groupHist(historyDb);$('st-giat').innerText=g.length;$('st-temuan').innerText=historyDb.length;$('st-sita').innerText=sitaDb.length;$('st-bl').innerText=blackDb.length;
+$('st-tim').innerHTML=(draftsPatroli.length||draftsUmum.length)?[...draftsPatroli.map(d=>`<span class='bg-red-500 text-white text-[9px] font-bold px-2 py-1 rounded uppercase animate-pulse'>${d.id_tim}</span>`),...draftsUmum.map(d=>`<span class='bg-blue-500 text-white text-[9px] font-bold px-2 py-1 rounded uppercase animate-pulse'>UMUM</span>`)].join(''):"<span class='text-[10px] text-slate-500 italic'>Aman/Nihil</span>";
+const fEl=$('filter-kat');const sel=fEl.value||'ALL';const kat={},tim={},tren={};const l7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);l7.push(d.toLocaleDateString('id-ID',{day:'2-digit',month:'short'}));}l7.forEach(x=>tren[x]=0);
+const fset=new Set();const mapData=[];historyDb.forEach(i=>{const mk=i.kategori||'Lainnya';const sk=(i.sub_kategori&&i.sub_kategori!=='-')?i.sub_kategori:mk;if(!mk.includes('APP'))fset.add(sk);if(sel==='ALL'||sel===sk){mapData.push(i);if(!mk.includes('APP')){kat[sk]=(kat[sk]||0)+1;const m=l7.find(d=>i.tanggal&&i.tanggal.includes(d.split(' ')[0]));if(m)tren[m]++;}tim[i.nama_tim]=(tim[i.nama_tim]||0)+1;}});
+if(fEl.options.length<=1){fEl.innerHTML="<option value='ALL'>Semua Kategori</option>"+[...fset].sort().map(k=>`<option value="${k}">${k}</option>`).join('');fEl.value=sel;}
+setTimeout(()=>{if(!adminMap){adminMap=L.map('adminMap',{zoomControl:false}).setView([-7.03,112.74],12);L.control.zoom({position:'bottomright'}).addTo(adminMap);L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'SIGAP'}).addTo(adminMap);}
+mapMk.forEach(m=>adminMap.removeLayer(m));mapMk=[];const bd=[];mapData.forEach(i=>{if(i.koordinat&&i.koordinat.includes(',')){const p=i.koordinat.split(',');const la=parseFloat(p[0]),lo=parseFloat(p[1]);if(!isNaN(la)&&!isNaN(lo)){mapMk.push(L.marker([la,lo]).addTo(adminMap).bindPopup(`<b>${(i.sub_kategori&&i.sub_kategori!=='-')?i.sub_kategori:i.kategori}</b><br>${i.nama_tim} • ${i.waktu} WIB<br><a href="${i.link_drive}" target="_blank">Lihat Foto</a>`));bd.push([la,lo]);}}});
+if(bd.length)adminMap.fitBounds(bd,{padding:[30,30]});adminMap.invalidateSize();},100);
+Chart.defaults.font.family='"Plus Jakarta Sans",sans-serif';
+if(chT)chT.destroy();const c1=$('chTren').getContext('2d');const gr=c1.createLinearGradient(0,0,0,400);gr.addColorStop(0,'rgba(59,130,246,.2)');gr.addColorStop(1,'rgba(59,130,246,0)');
+chT=new Chart(c1,{type:'line',data:{labels:Object.keys(tren),datasets:[{data:Object.values(tren),borderColor:'#3b82f6',backgroundColor:gr,fill:true,tension:.4,borderWidth:3,pointRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}},x:{grid:{display:false}}}}});
+if(chK)chK.destroy();const mk2=Object.keys(kat).map(l=>({l,v:kat[l]})).sort((a,b)=>b.v-a.val===undefined?0:b.v-a.v);const lb=[],vl=[];let ov=0;mk2.forEach((m,i)=>{if(i<5){lb.push(m.l);vl.push(m.v);}else ov+=m.v;});if(ov>0){lb.push('Lainnya');vl.push(ov);}
+chK=new Chart($('chKat').getContext('2d'),{type:'doughnut',data:{labels:lb,datasets:[{data:vl,backgroundColor:['#3b82f6','#10b981','#f59e0b','#f43f5e','#8b5cf6','#cbd5e1'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'70%',plugins:{legend:{position:'right',labels:{font:{size:10}}}}}});
+if(chTm)chTm.destroy();chTm=new Chart($('chTim').getContext('2d'),{type:'bar',data:{labels:Object.keys(tim).map(t=>t.toUpperCase()),datasets:[{data:Object.values(tim),backgroundColor:'#10b981',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}},x:{grid:{display:false}}}}});}
+function renderSita(){const c=$('wrap-sita');if(!sitaDb.length){c.innerHTML='<div class="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200"><i class="fa-solid fa-box-open text-4xl text-slate-300 mb-3"></i><p class="text-sm font-bold text-slate-400">Gudang masih kosong.</p></div>';return;}
+c.innerHTML=[...sitaDb].reverse().map(i=>{const img=i.foto?`<img src="data:image/jpeg;base64,${i.foto}" class="w-16 h-16 rounded-xl object-cover border border-slate-100 flex-shrink-0"/>`:`<div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-300 flex-shrink-0"><i class="fa-solid fa-image"></i></div>`;
+return `<div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex gap-4 items-center">${img}<div class="flex-grow"><div class="flex justify-between items-start mb-1"><h3 class="font-black text-[15px]">${i.jenis}</h3><span class="bg-blue-50 text-blue-600 px-2 py-0.5 rounded text-[11px] font-black border border-blue-100">${i.jumlah}</span></div><p class="text-[11px] font-bold text-slate-500 mb-1"><i class="fa-solid fa-location-dot mr-1"></i> ${i.lokasi}</p><div class="flex justify-between items-center mt-2 pt-2 border-t border-slate-50"><span class="text-[10px] font-bold text-slate-400">${i.tanggal} • ${i.waktu}</span><span class="text-[10px] font-black text-orange-600 uppercase">${i.tim}</span></div></div></div>`;}).join('');}
+function renderBlacklist(){const c=$('wrap-black');if(!blackDb.length){c.innerHTML='<div class="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200"><i class="fa-solid fa-user-shield text-4xl text-slate-300 mb-3"></i><p class="text-sm font-bold text-slate-400">Blacklist aman/kosong.</p></div>';return;}
+c.innerHTML=[...blackDb].reverse().map(i=>`<div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden"><div class="absolute -right-4 -bottom-4 text-red-50 text-6xl font-black"><i class="fa-solid fa-skull"></i></div><div class="relative z-10"><span class="bg-red-50 text-red-600 border border-red-100 text-[10px] font-black px-2 py-0.5 rounded uppercase">${i.kategori}</span><h3 class="font-black text-[16px] mt-1.5">${i.nama}</h3><p class="text-[12px] font-bold text-slate-400 mb-3 tracking-widest">NIK: ${i.nik}</p><div class="bg-slate-50 p-3 rounded-xl border border-slate-200"><p class="text-[12px] text-slate-600 italic">“${i.catatan}”</p></div><p class="text-[10px] font-bold text-slate-400 mt-3 text-right">Tercatat: ${i.tanggal}</p></div></div>`).join('');}
+function bukaBlacklist(){$('bl-nik').value='';$('bl-nama').value='';$('bl-catatan').value='';openSheet('sheet-blacklist');}
+function tutupBlacklist(){closeSheet('sheet-blacklist');}
+async function simpanBlacklist(){const nik=$('bl-nik').value.trim(),nama=$('bl-nama').value.trim();if(!nik||!nama){Swal.fire({icon:'warning',title:'NIK & Nama wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}
+const {error}=await sb.from('blacklist').insert([{nik,nama_pelanggar:nama,kategori_pelanggaran:$('bl-kat').value,catatan:$('bl-catatan').value||'-',tanggal_ditindak:tglStr()}]);
+tutupBlacklist();if(error)Swal.fire({icon:'error',title:'Gagal',text:error.message,customClass:{popup:'rounded-[32px]'}});else{modalSukses(`Pelanggar a.n ${nama} masuk daftar hitam.`);loadAll(false).then(renderBlacklist);}}
+function sinkronAduan(){loadAll(true).then(()=>filterAduan($('tab-aduan-baru').classList.contains('bg-slate-900')?'Antrean':'Diproses'));}
+function filterAduan(f){if(f==='Antrean'){$('tab-aduan-baru').className='flex-1 py-2 text-[12px] font-bold rounded-lg bg-slate-900 text-white';$('tab-aduan-proses').className='flex-1 py-2 text-[12px] font-bold rounded-lg text-slate-500';}else{$('tab-aduan-proses').className='flex-1 py-2 text-[12px] font-bold rounded-lg bg-slate-900 text-white';$('tab-aduan-baru').className='flex-1 py-2 text-[12px] font-bold rounded-lg text-slate-500';}renderAduan(f);}
+function renderAduan(f){const c=$('wrap-aduan');const data=aduanDb.filter(a=>f==='Antrean'?(a.status==='Antrean'||a.status==='Menunggu Triage'||a.status==='Ditunda'):(a.status!=='Antrean'&&a.status!=='Menunggu Triage'&&a.status!=='Ditunda'));
+if(!data.length){c.innerHTML='<div class="flex flex-col items-center py-16 bg-white rounded-[32px] border border-slate-100 shadow-sm mt-4"><div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mb-4"><i class="fa-solid fa-check-double text-4xl text-emerald-400"></i></div><h3 class="text-lg font-black">Semua Bersih!</h3></div>';return;}
+c.innerHTML='<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">'+[...data].reverse().map(a=>{const foto=a.foto?`<div class="mt-3 rounded-xl overflow-hidden border border-slate-200"><img src="data:image/jpeg;base64,${a.foto}" class="w-full h-32 object-cover"/></div>`:'';
+const badge=(a.status==='Antrean'||a.status==='Menunggu Triage')?'<span class="bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Antrean</span>':a.status==='Ditunda'?'<span class="bg-red-100 text-red-600 border border-red-200 text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Ditunda</span>':a.status.includes('Selesai')?'<span class="bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Selesai</span>':'<span class="bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-black px-2.5 py-1 rounded-full uppercase">Diproses</span>';
+const aksi=f==='Antrean'?`<button onclick='setStatusAduan("${a.id_tiket}","Diproses")' class='flex-1 bg-slate-900 text-white text-[12px] font-bold py-3 rounded-xl b'>Terima Laporan</button><button onclick='hapusAduan("${a.id_tiket}")' class='px-4 bg-red-50 text-red-500 text-[12px] font-bold py-3 rounded-xl border border-red-200 b'><i class="fa-solid fa-trash"></i></button>`
+:(!a.status.includes('Selesai')?`<button onclick='bukaProgress("${a.id_tiket}")' class='flex-1 bg-blue-50 text-blue-600 text-[12px] font-bold py-3 rounded-xl border border-blue-200 b'><i class="fa-solid fa-camera mr-1"></i> Progress</button><button onclick='setStatusAduan("${a.id_tiket}","Selesai")' class='flex-1 bg-emerald-500 text-white text-[12px] font-bold py-3 rounded-xl b'><i class="fa-solid fa-check-double mr-1"></i> Tutup</button>`
+:`<button onclick='hapusAduan("${a.id_tiket}")' class='w-full bg-slate-50 text-slate-400 text-[12px] font-bold py-3 rounded-xl border border-slate-200 b'><i class="fa-solid fa-trash mr-1"></i> Hapus Arsip</button>`);
+return `<div class="bg-white rounded-3xl shadow-sm border border-slate-200 flex flex-col overflow-hidden"><div class="bg-slate-50 px-5 py-3 border-b border-slate-100 flex justify-between items-center"><span class="text-slate-400 font-black text-[10px] tracking-widest">ID: ${a.id_tiket}</span>${badge}</div><div class="p-5 flex-grow"><h3 class="font-black text-[15px] mb-2">${a.kategori}</h3><div class="flex items-start gap-2 text-[11px] font-bold text-slate-500 mb-4"><i class="fa-solid fa-location-dot text-red-500 mt-0.5"></i><span>${a.lokasi}</span></div><div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-4"><p class="text-[12px] text-slate-600">${a.deskripsi}</p>${foto}</div><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 border border-blue-100"><i class="fa-solid fa-user text-sm"></i></div><div><p class="text-[12px] font-black">${a.nama}</p><p class="text-[9px] font-bold text-slate-400 uppercase mt-0.5">${a.tanggal} • ${a.waktu}</p></div><a href="https://wa.me/${noHp(a.hp)}" target="_blank" class="ml-auto w-9 h-9 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center border border-emerald-100 b"><i class="fa-brands fa-whatsapp text-lg"></i></a></div></div><div class="px-5 py-4 border-t border-slate-50 flex gap-2">${aksi}</div></div>`;}).join('')+'</div>';}
+async function setStatusAduan(id,st){load('Memperbarui...');const {error}=await sb.from('aduan_masyarakat').update({status:st}).eq('id_tiket',id);Swal.close();if(!error){const i=aduanDb.findIndex(a=>a.id_tiket===id);if(i>-1)aduanDb[i].status=st;filterAduan($('tab-aduan-baru').classList.contains('bg-slate-900')?'Antrean':'Diproses');}else Swal.fire({icon:'error',title:'Gagal update',customClass:{popup:'rounded-[32px]'}});}
+function hapusAduan(id){Swal.fire({title:'Hapus Permanen?',icon:'warning',showCancelButton:true,confirmButtonColor:'#ef4444',confirmButtonText:'Ya, Hapus',customClass:{popup:'rounded-[32px]'}}).then(async r=>{if(r.isConfirmed){load('Menghapus...');await sb.from('aduan_masyarakat').delete().eq('id_tiket',id);Swal.close();aduanDb=aduanDb.filter(a=>a.id_tiket!==id);filterAduan($('tab-aduan-baru').classList.contains('bg-slate-900')?'Antrean':'Diproses');}});}
+function bukaProgress(id){progId=id;$('prog-id').innerText=id;$('prog-teks').value='';hapusFotoProgress();const m=$('modal-admin-progress');m.classList.remove('hidden');m.classList.add('flex');setTimeout(()=>{m.classList.remove('opacity-0');$('modal-admin-progress-c').classList.remove('scale-95');},10);}
+function tutupProgress(){const m=$('modal-admin-progress');m.classList.add('opacity-0');$('modal-admin-progress-c').classList.add('scale-95');setTimeout(()=>{m.classList.add('hidden');m.classList.remove('flex');},300);}
+function fotoProgress(ev){const f=ev.target.files[0];if(!f)return;kompres(f,400,(c,url)=>{$('prog-prev').src=url;$('prog-prev-wrap').classList.remove('hidden');$('btn-prog-foto').classList.add('hidden');fotoProgB64=url.split(',')[1];});}
+function hapusFotoProgress(){fotoProgB64='';$('prog-foto').value='';$('prog-prev').src='';$('prog-prev-wrap').classList.add('hidden');$('btn-prog-foto').classList.remove('hidden');}
+async function simpanProgress(){const teks=$('prog-teks').value.trim();if(!teks&&!fotoProgB64){Swal.fire({icon:'warning',title:'Isi keterangan atau foto!',customClass:{popup:'rounded-[32px]'}});return;}
+const {error}=await sb.from('aduan_masyarakat').update({status:'Diproses (Tim di Lokasi)',progress_text:teks,progress_foto:fotoProgB64}).eq('id_tiket',progId);
+if(!error){const i=aduanDb.findIndex(a=>a.id_tiket===progId);if(i>-1){aduanDb[i].status='Diproses (Tim di Lokasi)';aduanDb[i].progress_text=teks;aduanDb[i].progress_foto=fotoProgB64;}tutupProgress();filterAduan('Diproses');Swal.fire({icon:'success',title:'Progress terkirim!',timer:1500,customClass:{popup:'rounded-[32px]'}});}else Swal.fire({icon:'error',title:'Gagal',customClass:{popup:'rounded-[32px]'}});}
+// ================= SKP & RIWAYAT =================
+function renderSKP(reset){const c=$('wrap-skp');const sel=$('skp-bulan');const inp=$('skp-nama');
+const bs=new Set();historyDb.forEach(i=>{if(i.tanggal&&i.tanggal.split(' ').length>2)bs.add(i.tanggal.split(' ')[1]+' '+i.tanggal.split(' ')[2]);});
+sel.innerHTML="<option value='ALL'>Semua Waktu</option>"+[...bs].map(b=>`<option value='${b}'>${b}</option>`).join('');
+const fb=sel.value||'ALL';const fn=(inp.value||'').toLowerCase().trim();
+const grouped=groupHist(historyDb).filter(g=>(fb==='ALL'||g.tanggal.includes(fb))&&(!fn||g.nama_tim.toLowerCase().includes(fn)));
+$('skp-count').innerText=grouped.length;
+if(!grouped.length){c.innerHTML='<div class="col-span-full text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200"><i class="fa-solid fa-database text-4xl text-slate-200 mb-3"></i><p class="text-sm font-bold text-slate-400">Data kosong.</p></div>';return;}
+c.innerHTML=grouped.map(g=>`<div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 flex flex-col justify-between h-full"><div class="border-b border-slate-50 pb-3 mb-3"><div class="flex justify-between items-start mb-1"><h3 class="font-black text-[14px] uppercase">${g.nama_tim}</h3><span class="bg-blue-50 text-blue-500 px-2 py-0.5 rounded text-[10px] font-black uppercase border border-blue-100">${g.temuan.length} Rangkaian</span></div><p class="text-[12px] font-bold text-slate-400"><i class="fa-regular fa-calendar mr-1"></i> ${g.tanggal} (${(g.waktu_mulai||'').replace(':','.')} WIB)</p></div><div class="flex gap-2 mt-auto pt-2"><a href="${g.link_drive}" target="_blank" class="flex-1 bg-blue-50 text-blue-600 font-bold py-3.5 rounded-2xl text-[12px] b flex items-center justify-center gap-2 border border-blue-200"><i class="fa-brands fa-google-drive text-lg"></i> Bukti</a><a href="${g.link_doc}" target="_blank" class="flex-1 bg-slate-50 text-slate-600 font-bold py-3.5 rounded-2xl text-[12px] b flex items-center justify-center gap-2 border border-slate-200"><i class="fa-solid fa-file-word text-emerald-500 text-lg"></i> Laporan</a></div></div>`).join('');}
+function renderRiwayat(){const c=$('wrap-riwayat');const my=groupHist(historyDb.filter(i=>i.nama_tim.toLowerCase()===currentUser.nama.toLowerCase()));
+if(!my.length){c.innerHTML='<div class="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200"><i class="fa-solid fa-folder-open text-4xl text-slate-200 mb-3"></i><p class="text-sm font-bold text-slate-400">Belum ada arsip.</p></div>';return;}
+c.innerHTML=my.map(g=>`<div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-4"><div class="flex justify-between items-center border-b border-slate-50 pb-3 mb-3"><div><h3 class="font-black text-[16px] uppercase">GIAT PUKUL ${(g.waktu_mulai||'').replace(':','.')} WIB</h3><p class="text-[11px] font-bold text-slate-400 mt-1">${g.tanggal}</p></div><div class="bg-orange-50 text-orange-600 px-3 py-1.5 rounded-xl text-xs font-bold">${g.temuan.length} Temuan</div></div><div class="grid grid-cols-2 gap-3 pt-1"><a href="${g.link_drive}" target="_blank" class="bg-slate-50 text-slate-600 font-bold py-3 rounded-2xl text-xs b flex items-center justify-center gap-2 border border-slate-200"><i class="fa-solid fa-folder-open text-blue-500"></i> Folder Foto</a><a href="${g.link_doc}" target="_blank" class="bg-slate-50 text-slate-600 font-bold py-3 rounded-2xl text-xs b flex items-center justify-center gap-2 border border-slate-200"><i class="fa-solid fa-file-word text-emerald-500"></i> Berkas Doc</a></div></div>`).join('');}
+// ================= ANGGOTA =================
+function renderAnggota(){const c=$('list-anggota');const arr=currentUser.anggota_tim||[];if(!arr.length){c.innerHTML='<div class="text-center py-8 bg-white rounded-2xl border border-dashed border-slate-300"><p class="text-[14px] font-bold text-slate-500">Belum ada anggota.</p></div>';return;}
+c.innerHTML=arr.map((n,i)=>`<div class="flex justify-between items-center bg-white border border-slate-100 p-4 rounded-2xl shadow-sm"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center text-sm border border-slate-200"><i class="fa-solid fa-user"></i></div><p class="text-[15px] font-bold">${n}</p></div><button onclick="hapusAnggota(${i})" class="w-10 h-10 text-red-400 bg-red-50 rounded-full b"><i class="fa-solid fa-trash-can text-sm"></i></button></div>`).join('');}
+async function saveAnggota(){await sb.from('daftar_anggota').delete().eq('id_tim',currentUser.nama);if(currentUser.anggota_tim.length)await sb.from('daftar_anggota').insert(currentUser.anggota_tim.map(n=>({id_tim:currentUser.nama,nama_anggota:n})));anggotaMap[currentUser.nama.toLowerCase()]=currentUser.anggota_tim;localStorage.setItem('sigap_session',JSON.stringify(currentUser));}
+async function tambahAnggota(){const v=$('in-anggota').value.trim();if(!v)return;currentUser.anggota_tim=currentUser.anggota_tim||[];currentUser.anggota_tim.push(v);$('in-anggota').value='';renderAnggota();await saveAnggota();}
+function hapusAnggota(i){Swal.fire({title:'Hapus Personel?',icon:'question',showCancelButton:true,confirmButtonColor:'#ea580c',confirmButtonText:'Hapus'}).then(async r=>{if(r.isConfirmed){currentUser.anggota_tim.splice(i,1);renderAnggota();await saveAnggota();}});}
+function renderPetugas(){renderAnggota();const c=$('list-petugas');c.innerHTML=$('list-anggota').innerHTML;}
+async function tambahPetugas(){await tambahAnggota();renderPetugas();}
+// ================= PATROLI =================
+function openSheet(id){$(id).classList.remove('hidden');$(id).classList.add('flex');setTimeout(()=>{$('#'+id+' .sheet').classList.remove('sh');$('#'+id+' .sheet').classList.add('sv');},10);}
+function closeSheet(id){$('#'+id+' .sheet').classList.remove('sv');$('#'+id+' .sheet').classList.add('sh');setTimeout(()=>{$(id).classList.add('hidden');$(id).classList.remove('flex');},300);}
+function bukaPersiapan(){buildCheck();openSheet('sheet-persiapan');}
+function tutupPersiapan(){closeSheet('sheet-persiapan');}
+function buildCheck(){const c=$('wrap-check');const arr=currentUser.anggota_tim||[];if(!arr.length){c.innerHTML="<p class='text-sm text-red-500 font-bold bg-red-50 p-4 rounded-xl text-center border border-red-200'>Daftar anggota kosong!</p>";return;}
+c.innerHTML=arr.map(n=>`<label class="flex items-center p-4 bg-white border border-slate-100 rounded-2xl cursor-pointer b shadow-sm"><input type="checkbox" value="${n}" class="cb hidden cb-a"/><div class="w-6 h-6 rounded-lg border-[3px] border-slate-300 flex items-center justify-center mr-4 bg-white"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-[14px] font-bold">${n}</span></label>`).join('');}
+function centangSemua(){const cbs=document.querySelectorAll('.cb-a');let all=true;cbs.forEach(c=>{if(!c.checked)all=false;});cbs.forEach(c=>c.checked=!all);}
+function tambahBKO(){const v=$('in-bko').value.trim();if(!v)return;$('wrap-check').insertAdjacentHTML('beforeend',`<label class="flex items-center p-4 bg-orange-50 border border-orange-100 rounded-2xl cursor-pointer b shadow-sm"><input type="checkbox" value="${v} (BKO)" checked class="cb hidden cb-a"/><div class="w-6 h-6 rounded-lg border-[3px] border-orange-300 flex items-center justify-center mr-4 bg-white"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-[14px] font-bold text-orange-600">${v} <span class="text-[10px] bg-orange-200 px-2 py-0.5 rounded ml-1">BKO</span></span></label>`);$('in-bko').value='';}
+async function mulaiPatroli(){const p=$('in-pimpinan').value.trim();if(!p){Swal.fire({icon:'warning',title:'Pimpinan apel wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}
+const cbs=[...document.querySelectorAll('.cb-a:checked')];if(!cbs.length){Swal.fire({icon:'warning',title:'Pilih minimal 1 anggota!',customClass:{popup:'rounded-[32px]'}});return;}
+metaPatroli={pimpinan_apel:p,anggota_hadir:cbs.map(c=>c.value)};listTemuan=[];tutupPersiapan();$('alert-draft').classList.add('hidden');switchView('pv-aktif');renderTimeline();await saveDraft();}
+function cekDraft(){const dr=draftsPatroli.find(d=>d.id_tim.toLowerCase()===currentUser.nama.toLowerCase());if(dr&&(dr.list_temuan_json||[]).length){metaPatroli=dr.meta_patroli||metaPatroli;listTemuan=mergeDraft(dr.list_temuan_json);$('alert-draft').classList.remove('hidden');$('alert-draft').classList.add('flex');$('text-draft').innerText=listTemuan.length+' kejadian di Server. Tap memantau.';}else $('alert-draft').classList.add('hidden');}
+function lanjutPatroli(){renderTimeline();switchView('pv-aktif');}
+function konfirmasiKeluar(){switchView('pv-dashboard');cekDraft();}
+async function saveDraft(){$('sync-cloud').innerHTML='<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyinkronkan...';
+const safe=listTemuan.map(i=>({id_laporan:i.id_laporan,waktu:i.waktu,tanggal:i.tanggal,kategori:i.kategori,koordinat:i.koordinat,lokasi:i.lokasi,keterangan:i.keterangan,foto:[]}));
+await sb.from('draf_patroli').upsert({id_tim:currentUser.nama,meta_patroli:metaPatroli,list_temuan_json:safe,updated_at:new Date().toISOString()});
+$('sync-cloud').innerHTML='<i class="fa-solid fa-cloud-arrow-up text-emerald-500"></i> Server Tersinkron';}
+function hapusDraft(){Swal.fire({title:'Batalkan & Hapus Giat?',icon:'warning',showCancelButton:true,confirmButtonColor:'#ea580c',confirmButtonText:'Ya, Hapus!'}).then(async r=>{if(r.isConfirmed){load('Menghapus...');await sb.from('draf_patroli').delete().eq('id_tim',currentUser.nama);listTemuan=[];metaPatroli={pimpinan_apel:'',anggota_hadir:[]};localStorage.removeItem('sigap_draft_patroli');Swal.close();switchView('pv-dashboard');$('alert-draft').classList.add('hidden');}});}
+function bukaTemuan(){editIdx=-1;$('tm-judul').innerText='Catat Kejadian';$('tm-fields').classList.remove('hidden');$('tm-save').innerText='Simpan Data';
+$('tm-kat').innerHTML=katOpts.map(k=>{const p=k.split('|');return `<option value="${k}">${p[1]&&p[1]!=='-'?p[1]:p[0]}</option>`;}).join('');
+$('tm-ket').value='';hapusFoto('patroli');openSheet('sheet-temuan');gps('tm-lok','tm-koord');}
+function bukaSisip(i){editIdx=i;$('tm-judul').innerText='Lampirkan Foto Bukti';$('tm-fields').classList.add('hidden');$('tm-save').innerText='Simpan Foto';fotoPatroli=listTemuan[i].foto?[...listTemuan[i].foto]:[];renderThumbs('patroli');openSheet('sheet-temuan');}
+function tutupTemuan(){closeSheet('sheet-temuan');}
+function wrapText(ctx,text,x,y,mw,lh){const w=text.split(' ');let line='';for(let n=0;n<w.length;n++){const t=line+w[n]+' ';if(ctx.measureText(t).width>mw&&n>0){ctx.fillText(line,x,y);line=w[n]+' ';y+=lh;}else line=t;}ctx.fillText(line,x,y);}
+function fotoKompresi(ev,mode){const files=ev.target.files;const isKam=ev.target.id.includes('kamera');if(!files||!files.length)return;
+Array.from(files).forEach(f=>{kompres(f,1000,(c,url)=>{if(isKam){const ctx=c.getContext('2d');const g=ctx.createLinearGradient(0,c.height-300,0,c.height);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.8)');ctx.fillStyle=g;ctx.fillRect(0,c.height-300,c.width,300);const n=new Date();const t=n.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}).replace('.',':');const d=n.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'});const hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][n.getDay()];const lok=mode==='patroli'?($('tm-lok').value||'Lokasi tidak diketahui'):($('umu-lok').value||'Lokasi tidak diketahui');ctx.textBaseline='bottom';ctx.fillStyle='#fff';ctx.font='bold 90px "Plus Jakarta Sans",sans-serif';ctx.fillText(t,40,c.height-130);const tw=ctx.measureText(t).width;ctx.fillStyle='#FBBF24';ctx.fillRect(40+tw+20,c.height-210,5,80);ctx.fillStyle='#fff';ctx.font='30px "Plus Jakarta Sans",sans-serif';ctx.fillText(d,40+tw+40,c.height-180);ctx.fillText(hari,40+tw+40,c.height-140);ctx.font='24px "Plus Jakarta Sans",sans-serif';wrapText(ctx,lok,40,c.height-80,c.width-100,32);}
+const b64=url.split(',')[1];if(mode==='patroli')fotoPatroli.push(b64);else fotoUmum.push(b64);renderThumbs(mode);});});
+ev.target.value='';}
+function renderThumbs(mode){const bar=mode==='patroli'?$('tm-bar'):$('umu-bar');const th=mode==='patroli'?$('tm-thumbs'):$('umu-thumbs');const ct=mode==='patroli'?$('tm-count'):$('umu-count');const arr=mode==='patroli'?fotoPatroli:fotoUmum;
+if(!arr.length){bar.classList.add('hidden');return;}bar.classList.remove('hidden');ct.innerText=arr.length+' BERKAS';
+th.innerHTML=arr.slice(0,3).map(f=>`<img src="data:image/jpeg;base64,${f}" class="w-8 h-8 rounded object-cover border border-slate-600"/>`).join('')+(arr.length>3?`<div class="w-8 h-8 rounded bg-blue-500 text-white flex items-center justify-center text-[10px] font-bold">+${arr.length-3}</div>`:'');}
+function hapusFoto(mode){if(mode==='patroli'){fotoPatroli=[];$('tm-kamera').value='';$('tm-galeri').value='';renderThumbs('patroli');}else{fotoUmum=[];$('umu-kamera').value='';$('umu-galeri').value='';renderThumbs('umum');}}
+async function simpanTemuan(){if(editIdx!==-1){if(!$('tm-fields').classList.contains('hidden')){listTemuan[editIdx].kategori=$('tm-kat').value;listTemuan[editIdx].lokasi=$('tm-lok').value;listTemuan[editIdx].koordinat=$('tm-koord').value;listTemuan[editIdx].keterangan=$('tm-ket').value;}
+listTemuan[editIdx].foto=[...fotoPatroli];tutupTemuan();renderTimeline();await saveDraft();return;}
+listTemuan.push({id_laporan:'TRB-'+Date.now(),waktu:jamStr(),tanggal:tglStr(),kategori:$('tm-kat').value,koordinat:$('tm-koord').value,lokasi:$('tm-lok').value,keterangan:$('tm-ket').value||'-',foto:[...fotoPatroli]});
+tutupTemuan();renderTimeline();await saveDraft();}
+function renderTimeline(){const l=$('tl-list');const k=$('tl-kosong');if(!listTemuan.length){l.innerHTML='';k.classList.remove('hidden');return;}k.classList.add('hidden');
+l.innerHTML='<div class="absolute left-[23px] top-6 bottom-0 w-[2px] bg-slate-200 -z-10"></div>'+listTemuan.map((i,idx)=>{const foto=(i.foto&&i.foto.length)?`<div class="flex gap-4 items-center bg-slate-50 p-3 rounded-2xl mt-4 relative"><img src="data:image/jpeg;base64,${i.foto[0]}" class="w-14 h-14 rounded-xl object-cover border border-slate-200"/><p class="text-[11px] font-bold text-slate-500 pr-8">${i.lokasi}</p><button onclick="bukaSisip(${idx})" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300 p-2"><i class="fa-solid fa-pen"></i></button></div>`:`<button onclick="bukaSisip(${idx})" class="w-full mt-3 bg-orange-50 border border-dashed border-orange-300 text-orange-600 font-bold text-[13px] py-3 rounded-2xl flex items-center justify-center gap-2 b"><i class="fa-solid fa-camera-retro"></i> LAMPIRKAN FOTO BUKTI</button>`;
+return `<div class="flex gap-4 relative items-start"><div class="w-12 h-12 bg-white border-2 border-slate-200 rounded-full flex flex-shrink-0 items-center justify-center z-10 shadow-sm text-lg"><i class="fa-solid fa-check"></i></div><div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm w-full"><div class="flex justify-between items-start mb-2"><h4 class="font-bold text-[15px] pr-4">${i.kategori.split('|').filter(x=>x!=='-').join(' - ')}</h4><button onclick="hapusKejadian(${idx})" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button></div><span class="inline-block text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md mb-2">${i.waktu} WIB</span><p class="text-[13px] text-slate-600">${i.keterangan}</p>${foto}</div></div>`;}).join('');}
+function hapusKejadian(i){Swal.fire({title:'Hapus Temuan?',icon:'warning',showCancelButton:true,confirmButtonColor:'#ea580c',confirmButtonText:'Hapus'}).then(async r=>{if(r.isConfirmed){listTemuan.splice(i,1);renderTimeline();await saveDraft();}});}
+async function kirimLaporan(){if(!listTemuan.length){Swal.fire({icon:'warning',title:'Log Book Kosong',customClass:{popup:'rounded-[32px]'}});return;}
+const btn=$('btnKirimSemua');btn.disabled=true;load('Mengirim Laporan...');
+const payload={action:'kirim_laporan_lengkap',data:{id_giat:'GIAT-'+Date.now(),tim:currentUser.nama.toUpperCase(),pimpinan_apel:metaPatroli.pimpinan_apel,anggota_hadir:metaPatroli.anggota_hadir,temuan:listTemuan}};
+try{const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});const res=await r.json();Swal.close();
+if(res.status==='success'){const rows=listTemuan.map(t=>{const p=t.kategori.split('|');return {id_laporan:payload.data.id_giat,tanggal:t.tanggal,waktu:t.waktu,nama_tim:payload.data.tim,kategori_giat:p[0],sub_kategori:p[1]||'-',lokasi_koordinat:t.koordinat,lokasi_teks:t.lokasi,keterangan_detail:t.keterangan,link_foto:res.folder_url,link_laporan_doc:res.doc_url,daftar_anggota:(metaPatroli.pimpinan_apel+', '+metaPatroli.anggota_hadir.join(', ')),thumbnail:(t.foto&&t.foto[0])?t.foto[0]:''};});
+await sb.from('log_patroli').insert(rows);await sb.from('draf_patroli').delete().eq('id_tim',currentUser.nama);
+let wa=`*IJIN MELAPORKAN*\nHari/tgl : ${listTemuan[0].tanggal}\nPukul : ${listTemuan[0].waktu} WIB s/d Selesai\nKegiatan : Patroli Ketertiban Umum\n\n*Rangkaian:*\n`;listTemuan.forEach((t,i)=>{wa+=`${i+1}. Pukul ${t.waktu} WIB - ${t.kategori.split('|').filter(x=>x!=='-').join(' - ')} - ${t.lokasi}\n`;});wa+=`\n📁 ${res.folder_url}`;
+modalSukses('Laporan tersimpan & Folder Drive tercetak.',`https://wa.me/?text=${encodeURIComponent(wa)}`);
+listTemuan=[];metaPatroli={pimpinan_apel:'',anggota_hadir:[]};localStorage.removeItem('sigap_draft_patroli');switchView('pv-dashboard');$('alert-draft').classList.add('hidden');}
+else Swal.fire({icon:'error',title:'Server Menolak',text:res.message,customClass:{popup:'rounded-[32px]'}});}catch(e){Swal.close();Swal.fire({icon:'error',title:'Gagal Koneksi',customClass:{popup:'rounded-[32px]'}});}
+btn.disabled=false;}
+// ================= SITA =================
+function bukaSitaan(){$('st-jenis').value='';$('st-jumlah').value='';$('st-lokasi').value='';hapusFotoSita();openSheet('sheet-sitaan');}
+function tutupSitaan(){closeSheet('sheet-sitaan');}
+function fotoSita(ev){const f=ev.target.files[0];if(!f)return;kompres(f,800,(c,url)=>{$('st-prev').src=url;$('st-prev-wrap').classList.remove('hidden');$('btn-st-foto').classList.add('hidden');fotoSitaB64=url.split(',')[1];});}
+function hapusFotoSita(){fotoSitaB64=null;$('st-kamera').value='';$('st-prev').src='';$('st-prev-wrap').classList.add('hidden');$('btn-st-foto').classList.remove('hidden');}
+async function simpanSita(){const j=$('st-jenis').value.trim(),jm=$('st-jumlah').value.trim();if(!j||!jm){Swal.fire({icon:'warning',title:'Jenis & Jumlah wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}
+const {error}=await sb.from('barang_bukti').insert([{id_sita:'BB-'+Date.now(),tanggal:tglStr(),waktu:jamStr(),tim:currentUser.nama.toUpperCase(),jenis_barang:j,jumlah:jm,lokasi:$('st-lokasi').value||'-',foto_base64:fotoSitaB64||''}]);
+tutupSitaan();if(error)Swal.fire({icon:'error',title:'Gagal',customClass:{popup:'rounded-[32px]'}});else{modalSukses('Barang sitaan masuk Gudang Virtual.');loadAll(false);}}
+// ================= UMUM =================
+function renderKatUmum(){const cats=[['Deteksi & Cegah Dini','fa-eye','blue'],['Patroli','fa-shield','emerald'],['Pembinaan & Penyuluhan','fa-users-rays','purple'],['Penanganan Unras','fa-fire','red'],['Penertiban','fa-gavel','orange'],['Pengamanan','fa-user-shield','teal'],['Pengawalan','fa-motorcycle','indigo']];
+$('umum-kat').innerHTML=cats.map(c=>`<button class="bg-white rounded-3xl p-5 shadow-sm border border-slate-50 flex flex-col items-start b text-left" onclick="bukaPersiapanUmum('${c[0]}')"><div class="w-12 h-12 bg-${c[2]}-50 text-${c[2]}-500 rounded-2xl flex items-center justify-center text-xl mb-4"><i class="fa-solid ${c[1]}"></i></div><h3 class="font-extrabold text-[14px]">${c[0]}</h3></button>`).join('');}
+function bukaPersiapanUmum(k){$('um-nama-giat').value='';$('um-pelapor').value='';$('um-title').innerText=k;buildCheckUmum();openSheet('sheet-persiapan-umum');}
+function tutupPersiapanUmum(){closeSheet('sheet-persiapan-umum');}
+function buildCheckUmum(){const c=$('um-wrap-check');$('um-search').value='';const arr=currentUser.anggota_tim||[];if(!arr.length){c.innerHTML="<p class='text-xs text-red-500 font-bold bg-red-50 p-4 rounded-xl text-center'>Belum ada petugas.</p>";return;}
+c.innerHTML=arr.map(n=>`<label class="flex items-center p-3 bg-white border border-slate-100 rounded-xl cursor-pointer b shadow-sm item-um" data-nama="${n.toLowerCase()}"><input type="checkbox" value="${n}" class="cb hidden cb-u"/><div class="w-5 h-5 rounded-md border-[2px] border-slate-300 flex items-center justify-center mr-3 bg-white"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-[13px] font-bold truncate">${n}</span></label>`).join('');}
+function cariAnggotaUmum(){const k=$('um-search').value.toLowerCase();document.querySelectorAll('.item-um').forEach(it=>{if(it.getAttribute('data-nama').includes(k)){it.classList.remove('hidden');it.classList.add('flex');}else{it.classList.remove('flex');it.classList.add('hidden');}});}
+function centangSemuaUmum(){const cbs=document.querySelectorAll('.item-um:not(.hidden) .cb-u');let all=true;cbs.forEach(c=>{if(!c.checked)all=false;});cbs.forEach(c=>c.checked=!all);}
+function tambahBKOUmum(){const v=$('um-bko').value.trim();if(!v)return;$('um-wrap-check').insertAdjacentHTML('afterbegin',`<label class="flex items-center p-3 bg-orange-50 border border-orange-100 rounded-xl cursor-pointer b item-um" data-nama="${v.toLowerCase()}"><input type="checkbox" value="${v} (BKO)" checked class="cb hidden cb-u"/><div class="w-5 h-5 rounded-md border-[2px] border-orange-300 flex items-center justify-center mr-3 bg-white"><svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div><span class="text-[13px] font-bold text-orange-600 truncate">${v} <span class="text-[9px] bg-orange-200 px-1.5 py-0.5 rounded ml-1">BKO</span></span></label>`);$('um-bko').value='';}
+async function mulaiLogbookUmum(){const ng=$('um-nama-giat').value.trim(),pl=$('um-pelapor').value.trim(),mk=$('um-title').innerText;
+if(!ng||!pl){Swal.fire({icon:'warning',title:'Nama Kegiatan & Pelapor wajib diisi!',customClass:{popup:'rounded-[32px]'}});return;}
+const cbs=[...document.querySelectorAll('.cb-u:checked')];if(!cbs.length){Swal.fire({icon:'warning',title:'Pilih minimal 1 petugas!',customClass:{popup:'rounded-[32px]'}});return;}
+tutupPersiapanUmum();activeUmum={id:'UMUM-'+Date.now(),nama_kegiatan:ng,nama_pelapor:pl,main_kategori:mk,anggota_hadir:cbs.map(c=>c.value),temuan:[]};
+await saveDraftUmum();renderTimelineUmum();switchView('uv-aktif');}
+async function saveDraftUmum(){const safe=activeUmum.temuan.map(i=>({waktu:i.waktu,tanggal:i.tanggal,sub_kategori:i.sub_kategori,koordinat:i.koordinat,lokasi:i.lokasi,keterangan:i.keterangan,foto:[]}));
+await sb.from('draf_petugas_umum').upsert({id_kegiatan:activeUmum.id,nama_kegiatan:activeUmum.nama_kegiatan,nama_pelapor:activeUmum.nama_pelapor,meta_data:{main_kategori:activeUmum.main_kategori,anggota_hadir:activeUmum.anggota_hadir},temuan_json:safe,updated_at:new Date().toISOString()});}
+function renderDraftUmum(){const c=$('wrap-draft-umum');if(!draftsUmum.length){c.innerHTML='<div class="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-200"><i class="fa-solid fa-folder-open text-4xl text-slate-200 mb-3"></i><p class="text-sm font-bold text-slate-400">Tidak ada giat aktif.</p></div>';return;}
+c.innerHTML=draftsUmum.map(d=>{const m=d.meta_data||{};const t=d.temuan_json||[];return `<div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 b relative" onclick="bukaDraftUmum('${d.id_kegiatan}')"><button onclick="hapusDraftUmum(event,'${d.id_kegiatan}')" class="absolute top-4 right-4 w-8 h-8 bg-red-50 text-red-500 rounded-full flex items-center justify-center z-10 b"><i class="fa-solid fa-trash-can text-sm"></i></button><h3 class="font-black text-[15px] pr-10 mb-2">${d.nama_kegiatan}</h3><span class="bg-orange-50 text-orange-600 px-2.5 py-1 rounded-lg text-[10px] font-black inline-block mb-2">${t.length} Item</span><p class="text-[12px] font-bold text-slate-400"><i class="fa-solid fa-user-pen mr-1"></i> ${d.nama_pelapor} • ${m.main_kategori||''}</p><button class="w-full bg-slate-50 text-blue-600 font-bold py-3 rounded-2xl text-[13px] mt-3 border border-slate-200"><i class="fa-solid fa-arrow-right-to-bracket"></i> Lanjutkan Logbook</button></div>`;}).join('');}
+function bukaDraftUmum(id){const d=draftsUmum.find(x=>x.id_kegiatan===id);if(!d)return;const m=d.meta_data||{};activeUmum={id:d.id_kegiatan,nama_kegiatan:d.nama_kegiatan,nama_pelapor:d.nama_pelapor,main_kategori:m.main_kategori||'',anggota_hadir:m.anggota_hadir||[],temuan:d.temuan_json||[]};renderTimelineUmum();switchView('uv-aktif');}
+function hapusDraftUmum(ev,id){ev.stopPropagation();Swal.fire({title:'Hapus Logbook?',icon:'warning',showCancelButton:true,confirmButtonColor:'#ea580c',confirmButtonText:'Hapus'}).then(async r=>{if(r.isConfirmed){await sb.from('draf_petugas_umum').delete().eq('id_kegiatan',id);draftsUmum=draftsUmum.filter(d=>d.id_kegiatan!==id);renderDraftUmum();}});}
+function bukaTemuanUmum(){editIdxUmum=-1;$('umu-fields').classList.remove('hidden');$('umu-save').innerText='Simpan Data';
+$('umu-sub').innerHTML=(subMap[activeUmum.main_kategori]||['Lainnya']).map(s=>`<option value="${s}">${s}</option>`).join('');
+$('umu-ket').value='';hapusFoto('umum');openSheet('sheet-temuan-umum');gps('umu-lok','umu-koord');}
+function tutupTemuanUmum(){closeSheet('sheet-temuan-umum');}
+async function simpanTemuanUmum(){if(editIdxUmum!==-1){if(!$('umu-fields').classList.contains('hidden')){activeUmum.temuan[editIdxUmum].sub_kategori=$('umu-sub').value;activeUmum.temuan[editIdxUmum].lokasi=$('umu-lok').value;activeUmum.temuan[editIdxUmum].koordinat=$('umu-koord').value;activeUmum.temuan[editIdxUmum].keterangan=$('umu-ket').value;}
+activeUmum.temuan[editIdxUmum].foto=[...fotoUmum];tutupTemuanUmum();renderTimelineUmum();await saveDraftUmum();return;}
+activeUmum.temuan.push({waktu:jamStr(),tanggal:tglStr(),sub_kategori:$('umu-sub').value,koordinat:$('umu-koord').value,lokasi:$('umu-lok').value,keterangan:$('umu-ket').value||'-',foto:[...fotoUmum]});
+tutupTemuanUmum();renderTimelineUmum();await saveDraftUmum();}
+function renderTimelineUmum(){$('umum-judul').innerText=activeUmum.nama_kegiatan;const l=$('tlu-list');const k=$('tlu-kosong');
+if(!activeUmum.temuan.length){l.innerHTML='';k.classList.remove('hidden');return;}k.classList.add('hidden');
+l.innerHTML='<div class="absolute left-[23px] top-6 bottom-0 w-[2px] bg-slate-200 -z-10"></div>'+activeUmum.temuan.map((i,idx)=>{const foto=(i.foto&&i.foto.length)?`<div class="flex gap-4 items-center bg-slate-50 p-3 rounded-2xl mt-4"><img src="data:image/jpeg;base64,${i.foto[0]}" class="w-14 h-14 rounded-xl object-cover border border-slate-200"/><p class="text-[11px] font-bold text-slate-500 pr-8">${i.lokasi}</p></div>`:`<button class="w-full mt-3 bg-orange-50 border border-dashed border-orange-300 text-orange-600 font-bold text-[13px] py-3 rounded-2xl flex items-center justify-center gap-2 b"><i class="fa-solid fa-camera-retro"></i> LAMPIRKAN BUKTI</button>`;
+return `<div class="flex gap-4 relative items-start"><div class="w-12 h-12 bg-white border-2 border-slate-200 rounded-full flex flex-shrink-0 items-center justify-center z-10 shadow-sm text-lg"><i class="fa-solid fa-check"></i></div><div class="bg-white border border-slate-100 p-5 rounded-3xl shadow-sm w-full"><h4 class="font-bold text-[15px] mb-2">${i.sub_kategori}</h4><span class="inline-block text-[11px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md mb-2">${i.waktu} WIB</span><p class="text-[13px] text-slate-600">${i.keterangan}</p>${foto}</div></div>`;}).join('');}
+async function kirimLaporanUmum(){if(!activeUmum.temuan.length){Swal.fire({icon:'warning',title:'Log Book Kosong',customClass:{popup:'rounded-[32px]'}});return;}
+load('Mengirim Laporan...');const payload={action:'kirim_laporan_umum',data:activeUmum};
+try{const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify(payload)});const res=await r.json();Swal.close();
+if(res.status==='success'){const rows=activeUmum.temuan.map(t=>({id_laporan:activeUmum.id,tanggal:t.tanggal,waktu:t.waktu,nama_kegiatan:activeUmum.nama_kegiatan,kategori:activeUmum.main_kategori,sub_kategori:t.sub_kategori,koordinat:t.koordinat,lokasi:t.lokasi,keterangan:t.keterangan,link_folder:res.folder_url,link_laporan_doc:res.doc_url,daftar_anggota:(activeUmum.nama_pelapor+', '+activeUmum.anggota_hadir.join(', ')),thumbnail:(t.foto&&t.foto[0])?t.foto[0]:''}));
+await sb.from('log_petugas_umum').insert(rows);await sb.from('draf_petugas_umum').delete().eq('id_kegiatan',activeUmum.id);
+modalSukses('Laporan Petugas Umum terarsip di Drive.',`https://wa.me/?text=${encodeURIComponent('Laporan '+activeUmum.nama_kegiatan+'\n📁 '+res.folder_url)}`);
+activeUmum=null;umumNav('uv-dashboard');loadAll(false);}else Swal.fire({icon:'error',title:'Server Menolak',customClass:{popup:'rounded-[32px]'}});}catch(e){Swal.close();Swal.fire({icon:'error',title:'Gagal Koneksi',customClass:{popup:'rounded-[32px]'}});}}
+// ================= MODAL SUKSES =================
+function modalSukses(pesan,wa){$('modal-sukses-desc').innerText=pesan;const b=$('btnShareWA');if(wa){b.classList.remove('hidden');b.setAttribute('onclick',`window.open('${wa}','_blank')`);}else b.classList.add('hidden');
+const m=$('modal-sukses');m.classList.remove('hidden');m.classList.add('flex');setTimeout(()=>$('modal-sukses-c').classList.remove('scale-95'),10);}
+function tutupModalSukses(){$('modal-sukses').classList.add('hidden');$('modal-sukses').classList.remove('flex');}
+// ================= START =================
+document.addEventListener('DOMContentLoaded',()=>{initApp();renderKatUmum();});
+</script>
+</body>
+</html>
